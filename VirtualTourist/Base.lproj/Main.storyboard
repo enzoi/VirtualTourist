@@ -36,6 +36,9 @@
                     <navigationItem key="navigationItem" title="Virtual Tourist" id="Ify-V5-iwE">
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="opR-Ac-AaY"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="mapView" destination="aG8-6Q-lTg" id="dg8-n4-7t1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -93,10 +96,31 @@
                             <constraint firstItem="5Kw-g6-SF3" firstAttribute="top" secondItem="AYU-OU-3hL" secondAttribute="bottom" constant="8" symbolic="YES" id="yrH-3R-6je"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="detailMapView" destination="AYU-OU-3hL" id="cOl-9u-gCs"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="noB-3R-Msa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1780" y="138.98050974512745"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="RhX-UB-FEh">
+            <objects>
+                <viewController id="FKn-Sg-uLd" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="WRe-VN-4rJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="kfy-H9-VOx"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xrF-WP-Sjw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d7E-Xr-8NU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-386" y="139"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="KMu-E4-NHB">
