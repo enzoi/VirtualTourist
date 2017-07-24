@@ -104,10 +104,10 @@
             </objects>
             <point key="canvasLocation" x="1780" y="138.98050974512745"/>
         </scene>
-        <!--View Controller-->
+        <!--LoginVC-->
         <scene sceneID="RhX-UB-FEh">
             <objects>
-                <viewController id="FKn-Sg-uLd" sceneMemberID="viewController">
+                <viewController id="FKn-Sg-uLd" customClass="LoginVC" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="WRe-VN-4rJ"/>
                         <viewControllerLayoutGuide type="bottom" id="kfy-H9-VOx"/>
