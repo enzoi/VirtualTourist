@@ -42,6 +42,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="aG8-6Q-lTg" id="dg8-n4-7t1"/>
+                        <segue destination="SpI-Tk-hBT" kind="show" identifier="photoAlbumVC" id="1fJ-oK-fL5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

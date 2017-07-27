@@ -69,6 +69,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 arrowButton.frame.size.width = 25
                 arrowButton.frame.size.height = 25
                 arrowButton.setImage(UIImage(named: "icons8-Forward Filled-50"), for: .normal)
+                arrowButton.addTarget(self, action: #selector(didClickPhotoAlbum), for: .touchUpInside)
                 pinView!.rightCalloutAccessoryView = arrowButton
             
                 let deleteButton = UIButton(type: .custom)
@@ -93,6 +94,22 @@ class MapVC: UIViewController, MKMapViewDelegate {
         if let annotation = view.annotation as? PinAnnotation {
             mapView.removeAnnotation(annotation)
         }
+    }
+    
+    // MARK: Segue
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        //Notice that this code works for both Scissors and Paper
+        if segue.identifier == "photoAlbumVC" {
+            let controller = segue.destination as! PhotoAlbumVC
+        }
+        
+    }
+    
+    func didClickPhotoAlbum(button: UIButton) {
+        
+        performSegue(withIdentifier: "photoAlbumVC", sender: self)
+        
     }
     
 }
