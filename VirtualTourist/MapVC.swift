@@ -16,6 +16,8 @@ class MapVC: UIViewController, MKMapViewDelegate {
     
     var annotations = [PinAnnotation]()
     var longPressGesture: UILongPressGestureRecognizer? = nil
+    var latitude: Double?
+    var longitude: Double?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +36,8 @@ class MapVC: UIViewController, MKMapViewDelegate {
             let pinAnnotation = PinAnnotation()
             let touchPoint = gestureRecognizer.location(in: mapView)
             let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+            self.latitude = newCoordinates.latitude
+            self.longitude = newCoordinates.longitude
             pinAnnotation.setCoordinate(newCoordinate: newCoordinates)
             pinAnnotation.title = "Photo Album"
             
@@ -102,6 +106,10 @@ class MapVC: UIViewController, MKMapViewDelegate {
         //Notice that this code works for both Scissors and Paper
         if segue.identifier == "photoAlbumVC" {
             let controller = segue.destination as! PhotoAlbumVC
+            
+            controller.latitude = self.latitude!
+            controller.longitude = self.longitude!
+            
         }
         
     }

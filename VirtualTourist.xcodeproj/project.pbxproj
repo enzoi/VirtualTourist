@@ -138,9 +138,9 @@
 		CF5FCB9F1F21A0A500E6CB5E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				CF246C6C1F20535C00A2EC5F /* PhotoAlbumVC.swift */,
-				CF246C401F20308500A2EC5F /* MapVC.swift */,
 				CF5FCB9C1F21A03F00E6CB5E /* LoginVC.swift */,
+				CF246C401F20308500A2EC5F /* MapVC.swift */,
+				CF246C6C1F20535C00A2EC5F /* PhotoAlbumVC.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
