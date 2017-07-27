@@ -7,83 +7,110 @@
 //
 
 import UIKit
+import Foundation
 import MapKit
 
-class MapVC: UIViewController {
+class MapVC: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
-    let annotation = MKPointAnnotation()
+    
+    var annotations = [PinAnnotation]()
     var longPressGesture: UILongPressGestureRecognizer? = nil
-    var tapGesture: UITapGestureRecognizer? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Add Edit Button Programmatically
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonPressed(_:)))
-        
-        // Set up gestures
+        // Set up gestures and add
         longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotation))
-        tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeAnnotation))
-        
-        // Add Long Press Gesture
         addLongPressGesture()
-
     }
     
     func addAnnotation(gestureRecognizer:UIGestureRecognizer){
         
-        let touchPoint = gestureRecognizer.location(in: mapView)
-        let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-        self.annotation.coordinate = newCoordinates
-        mapView.addAnnotation(annotation)
-    }
-    
-    func removeAnnotation(gesture: UIGestureRecognizer) {
+        self.mapView.delegate = self
         
-        if gesture.state == UIGestureRecognizerState.ended {
-            self.mapView.removeAnnotation(annotation)
+        if gestureRecognizer.state == .ended {
+        
+            let pinAnnotation = PinAnnotation()
+            let touchPoint = gestureRecognizer.location(in: mapView)
+            let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+            pinAnnotation.setCoordinate(newCoordinate: newCoordinates)
+            pinAnnotation.title = "Photo Album"
+            
+            mapView.addAnnotation(pinAnnotation)
+            annotations.append(pinAnnotation)
         }
-        
-        resetBarButton(title: "Done")
-        
-    }
-    
-    func addTapGesture() {
-        self.tapGesture?.numberOfTapsRequired = 1
-        self.mapView.addGestureRecognizer(self.tapGesture!)
     }
     
     func addLongPressGesture() {
         self.longPressGesture?.minimumPressDuration = 0.5
         self.mapView.addGestureRecognizer(self.longPressGesture!)
     }
+  
     
-    func resetBarButton(title: String) {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(editButtonPressed(_:)))
-    }
-
-    @IBAction func editButtonPressed(_ sender: Any) {
+    // MARK: Map View
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
-        if self.navigationItem.rightBarButtonItem?.title == "Edit" {
+        let reuseId = "pin"
+        
+        if annotation is PinAnnotation {
+        
+            var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
             
-            if let longPressGesture = longPressGesture {
-                view.removeGestureRecognizer(longPressGesture)
+            if pinView == nil {
+                
+                pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+                pinView!.canShowCallout = true
+                pinView!.pinTintColor = .red
+                pinView!.frame.size.height = 30
+                
+                let arrowButton = UIButton(type: .custom)
+                arrowButton.frame.size.width = 25
+                arrowButton.frame.size.height = 25
+                arrowButton.setImage(UIImage(named: "icons8-Forward Filled-50"), for: .normal)
+                pinView!.rightCalloutAccessoryView = arrowButton
+            
+                let deleteButton = UIButton(type: .custom)
+                deleteButton.backgroundColor = UIColor.red
+                deleteButton.frame.size.width = 50
+                deleteButton.frame.size.height = 50
+                deleteButton.setImage(UIImage(named: "Trash"), for: .normal)
+                pinView!.leftCalloutAccessoryView = deleteButton
+            
+            } else {
+                pinView!.annotation = annotation
             }
-            
-            addTapGesture()
-            resetBarButton(title: "Done")
+        
+            return pinView
             
         } else {
-            
-            if let tapGesture = tapGesture {
-                view.removeGestureRecognizer(tapGesture)
-            }
-            
-            addLongPressGesture()
-            resetBarButton(title: "Edit")
+            return nil
         }
-        
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if let annotation = view.annotation as? PinAnnotation {
+            mapView.removeAnnotation(annotation)
+        }
+    }
+    
+}
+
+class PinAnnotation : NSObject, MKAnnotation {
+    private var coord: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    
+    var coordinate: CLLocationCoordinate2D {
+        get {
+            return coord
+        }
+    }
+    
+    var title: String?
+    var subtitle: String?
+    
+    func setCoordinate(newCoordinate: CLLocationCoordinate2D) {
+        self.coord = newCoordinate
     }
 }
 
