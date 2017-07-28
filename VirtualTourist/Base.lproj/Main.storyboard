@@ -80,7 +80,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="WCb-wh-TyM">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="photoViewCell" reuseIdentifier="photoViewCell" id="WCb-wh-TyM" customClass="PhotoViewCell" customModule="VirtualTourist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="115" height="110"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -103,12 +103,14 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="cell" destination="WCb-wh-TyM" id="Xiy-aB-uhY"/>
+                        <outlet property="collectionView" destination="5Kw-g6-SF3" id="gIN-Gg-gn4"/>
                         <outlet property="detailMapView" destination="AYU-OU-3hL" id="cOl-9u-gCs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="noB-3R-Msa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1780" y="138.98050974512745"/>
+            <point key="canvasLocation" x="1778" y="139"/>
         </scene>
         <!--LoginVC-->
         <scene sceneID="RhX-UB-FEh">
@@ -144,7 +146,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="juK-vs-QyI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="335" y="139"/>
+            <point key="canvasLocation" x="353" y="139"/>
         </scene>
     </scenes>
 </document>

@@ -9,9 +9,17 @@
 import UIKit
 import MapKit
 
-class PhotoAlbumVC: UIViewController {
+protocol FlickrPhotoDownloadDelegate {
+    func finishedDownloading(photos:[Photo])
+}
+
+class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
 
     @IBOutlet weak var detailMapView: MKMapView!
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    
+    var delegate:FlickrPhotoDownloadDelegate?
     
     var annotation = MKPointAnnotation()
     var latitude: Double?
@@ -20,7 +28,10 @@ class PhotoAlbumVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // span to zoom(code below created based on the solution from https://stackoverflow.com/questions/39615416/swift-span-zoom)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        // Span to zoom(code below created based on the solution from https://stackoverflow.com/questions/39615416/swift-span-zoom)
         let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: self.latitude!, longitude: self.longitude!), span: span)
         detailMapView.setRegion(region, animated: true)
@@ -45,7 +56,36 @@ class PhotoAlbumVC: UIViewController {
             Constants.FlickrParameterKeys.Page: 1
             ] as [String : Any]
         displayImageFromFlickrBySearch(methodParameters as [String:AnyObject])
+        
+        flowLayoutSetup()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        flowLayoutSetup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        collectionView?.reloadData()
+    }
+    
+    func flowLayoutSetup() {
+        
+        let space:CGFloat = 3.0
+        var dimension:CGFloat
+        
+        if view.frame.size.height > view.frame.size.width { // portrait mode
+            dimension = (view.frame.size.width - (2 * space)) / 3.0
+        } else { // landscape mode
+            dimension = (view.frame.size.width - (4 * space)) / 5.0
+        }
+        
+        flowLayout.minimumInteritemSpacing = space
+        flowLayout.minimumLineSpacing = space
+        flowLayout.itemSize = CGSize(width: dimension, height: dimension)
+        
+    }
+
 
     // MARK: Flickr API
     
@@ -119,8 +159,7 @@ class PhotoAlbumVC: UIViewController {
             } else {
                 
                 print(photosArray)
-                // TODO: Display photos using collection view
-                
+                let photos = Photo.photosFromResults(photosArray)
             }
         }
         
@@ -158,5 +197,44 @@ class PhotoAlbumVC: UIViewController {
             return "0,0,0,0"
         }
     }
+    
+    
+    // MARK:- UICollectionViewDataSource methods
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1 // photos.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath:IndexPath) {
+        // TODO: Replace existing photo with new one when selected
+        // Get another photos from the results
+        
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let reuseIdentifier = "photoViewCell"
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoViewCell
+        let photos = Photos.sharedInstance.photos
+        let photo = photos[indexPath.row]
+        cell.imageView.frame.size = cell.frame.size
+        
+        // TODO: Get photos from imageURL
+
+        
+        return cell
+    }
 
 }
+
+class PhotoViewCell: UICollectionViewCell {
+    
+    @IBOutlet weak var imageView: UIImageView!
+    
+}
+
