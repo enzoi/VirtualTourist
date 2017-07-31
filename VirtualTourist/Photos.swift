@@ -10,8 +10,9 @@ import Foundation
 
 class Photos {
     
-    let photos = [Photo]()
+    var imageUrls = [URL]()
     static let sharedInstance = Photos()
     private init() {} //This prevents others from using the default '()' initializer for this class.
     
 }
+

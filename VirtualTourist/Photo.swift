@@ -10,14 +10,14 @@ import Foundation
 
 struct Photo {
 
-    var id: String
-    var title: String
-    var farm: String
-    var secret: String
-    var server: String
-    var imageURL: NSURL {
+    var id: String?
+    var title: String?
+    var farm: String?
+    var secret: String?
+    var server: String?
+    var imageURL: URL? {
         get {
-            let url = NSURL(string: "http://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_m.jpg")!
+            let url = URL(string: "http://farm\(String(describing: farm)).staticflickr.com/\(String(describing: server))/\(String(describing: id))_\(String(describing: secret))_m.jpg")!
             return url
         }
     }
@@ -26,23 +26,25 @@ struct Photo {
     
     init(dictionary: [String:Any]) {
 
-        id = dictionary["id"] as! String
-        title = dictionary["title"] as! String
-        farm = dictionary["farm"] as! String
-        secret = dictionary["secret"] as! String
-        server = dictionary["server"]as! String
+        id = dictionary["id"] as? String
+        title = dictionary["title"] as? String
+        farm = dictionary["farm"] as? String
+        secret = dictionary["secret"] as? String
+        server = dictionary["server"]as? String
 
     }
     
-    static func photosFromResults(_ results: [[String:AnyObject]]) -> [Photo] {
+    /*
+    static func photosFromResults(_ results: [String:AnyObject]) -> [Photo] {
         
         var photos = Photos.sharedInstance.photos
         
-        // iterate through array of dictionaries, each Movie is a dictionary
+        // iterate through array of dictionaries, each Photo is a dictionary
         for result in results {
-            photos.append(Photo(dictionary: result))
+            photos.append(Photo(dictionary: results))
         }
         
         return photos
     }
+    */
 }
