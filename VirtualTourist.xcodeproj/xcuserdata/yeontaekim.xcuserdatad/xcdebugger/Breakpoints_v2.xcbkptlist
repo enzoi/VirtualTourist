@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VirtualTourist/PhotoAlbumVC.swift"
-            timestampString = "523220897.372578"
+            timestampString = "523222492.864521"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "169"
-            endingLineNumber = "169"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
             landmarkName = "PhotoViewCell"
             landmarkType = "3">
          </BreakpointContent>

@@ -118,14 +118,11 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
                     
                     DispatchQueue.global(qos: .background).async {
                         let imageURL = Photos.sharedInstance.imageUrls[indexPath.row]
-                        print("imageURL: ", imageURL)
-                        
                         let data = try? Data(contentsOf: imageURL)
                         let image = UIImage(data: data!)!
                         
                         DispatchQueue.main.async {
                             activityIndicator.stopAnimating()
-                            print("insdie DispatchQueue.main.async")
                             cell.imageView?.image = image
                         }
                     }
@@ -140,9 +137,33 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath:IndexPath) {
+        
+        let cell = collectionView.cellForItem(at: indexPath) as! PhotoViewCell
+        cell.imageView.image = nil // Reset image
+        
+        let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
+        activityIndicator.center = CGPoint(x: cell.contentView.frame.size.width / 2, y: cell.contentView.frame.size.height / 2)
+        activityIndicator.color = UIColor.lightGray
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        cell.addSubview(activityIndicator)
+        
+        activityIndicator.startAnimating()
+        
         // TODO: Replace existing photo with new one when selected
         // Get another photos from the results
+
+        let randomPhotoIndex = Int(arc4random_uniform(UInt32(Photos.sharedInstance.imageUrls.count)))
         
+        DispatchQueue.global(qos: .background).async {
+            let imageURL = Photos.sharedInstance.imageUrls[randomPhotoIndex]
+            let data = try? Data(contentsOf: imageURL)
+            let image = UIImage(data: data!)!
+            
+            DispatchQueue.main.async {
+                activityIndicator.stopAnimating()
+                cell.imageView?.image = image
+            }
+        }
         
     }
     
