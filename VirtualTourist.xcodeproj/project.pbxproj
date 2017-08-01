@@ -21,6 +21,8 @@
 		CFE86F481F2AF2C200DA9FED /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE86F471F2AF2C200DA9FED /* Photo.swift */; };
 		CFE86F4A1F2B276900DA9FED /* Photos.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE86F491F2B276900DA9FED /* Photos.swift */; };
 		CFE86F4D1F2F069F00DA9FED /* FlickrClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE86F4C1F2F069F00DA9FED /* FlickrClient.swift */; };
+		CFE86F4F1F2FC20B00DA9FED /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE86F4E1F2FC20A00DA9FED /* Pin.swift */; };
+		CFE86F511F2FC2C300DA9FED /* Pins.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE86F501F2FC2C300DA9FED /* Pins.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,8 @@
 		CFE86F471F2AF2C200DA9FED /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		CFE86F491F2B276900DA9FED /* Photos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photos.swift; sourceTree = "<group>"; };
 		CFE86F4C1F2F069F00DA9FED /* FlickrClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrClient.swift; sourceTree = "<group>"; };
+		CFE86F4E1F2FC20A00DA9FED /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
+		CFE86F501F2FC2C300DA9FED /* Pins.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pins.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +149,8 @@
 				CFE86F4B1F2F067000DA9FED /* Flickr */,
 				CFE86F471F2AF2C200DA9FED /* Photo.swift */,
 				CFE86F491F2B276900DA9FED /* Photos.swift */,
+				CFE86F4E1F2FC20A00DA9FED /* Pin.swift */,
+				CFE86F501F2FC2C300DA9FED /* Pins.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -328,6 +334,8 @@
 				CF246C6D1F20535C00A2EC5F /* PhotoAlbumVC.swift in Sources */,
 				CF246C411F20308500A2EC5F /* MapVC.swift in Sources */,
 				CF5FCB9D1F21A03F00E6CB5E /* LoginVC.swift in Sources */,
+				CFE86F511F2FC2C300DA9FED /* Pins.swift in Sources */,
+				CFE86F4F1F2FC20B00DA9FED /* Pin.swift in Sources */,
 				CF246C3F1F20308500A2EC5F /* AppDelegate.swift in Sources */,
 				CFE86F421F2AB6A800DA9FED /* GCDBlackBox.swift in Sources */,
 				CFE86F441F2AB6BE00DA9FED /* Constants.swift in Sources */,

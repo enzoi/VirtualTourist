@@ -14,10 +14,6 @@ class FlickrClient : NSObject {
     
     // MARK: Properties
     
-    var key: [String: String] = [ "uniqueKey": "" ]
-    var firstName: String = ""
-    var lastName: String = ""
-    var objectId: String = ""
     
     // MARK: Initializers
     

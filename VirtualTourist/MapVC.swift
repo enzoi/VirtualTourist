@@ -14,6 +14,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     
+    let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     var annotations = [PinAnnotation]()
     var longPressGesture: UILongPressGestureRecognizer? = nil
     var latitude: Double?
@@ -25,6 +26,40 @@ class MapVC: UIViewController, MKMapViewDelegate {
         // Set up gestures and add
         longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotation))
         addLongPressGesture()
+        
+        // Set up activity indicator
+        activityIndicator.center = CGPoint(x: mapView.frame.size.width / 2, y: mapView.frame.size.height / 2)
+        activityIndicator.color = UIColor.lightGray
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        view.addSubview(activityIndicator)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Get all existing pin annotations
+        self.activityIndicator.startAnimating()
+        
+        mapView.removeAnnotations(mapView.annotations)
+        let pins = Pins.sharedInstance.pins
+        
+        if pins.count != 0 { // There are pins already
+            
+            for pin in Pins.sharedInstance.pins {
+                    
+                let pinAnnotation = pin.getPinAnnotationsFromPin(pin: pin)
+                self.annotations.append(pinAnnotation)
+                    
+            }
+                
+            performUIUpdatesOnMain {
+                // When the array is complete, we add the annotations to the map.
+                self.mapView.addAnnotations(self.annotations)
+                self.activityIndicator.stopAnimating()
+            }
+        }
+        
+        self.activityIndicator.stopAnimating()
     }
     
     func addAnnotation(gestureRecognizer:UIGestureRecognizer){
@@ -32,17 +67,23 @@ class MapVC: UIViewController, MKMapViewDelegate {
         self.mapView.delegate = self
         
         if gestureRecognizer.state == .ended {
-        
-            let pinAnnotation = PinAnnotation()
+            
             let touchPoint = gestureRecognizer.location(in: mapView)
             let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
             self.latitude = newCoordinates.latitude
             self.longitude = newCoordinates.longitude
+            
+            // Save pin
+            let pin = Pin(dictionary: ["latitude": newCoordinates.latitude, "longitude": newCoordinates.longitude])
+            Pins.sharedInstance.pins.append(pin)
+            
+            // Get pin annotation
+            let pinAnnotation = PinAnnotation()
             pinAnnotation.setCoordinate(newCoordinate: newCoordinates)
             pinAnnotation.title = "Photo Album"
             
+            // Add it to Map View
             mapView.addAnnotation(pinAnnotation)
-            annotations.append(pinAnnotation)
         }
     }
     
@@ -122,8 +163,11 @@ class MapVC: UIViewController, MKMapViewDelegate {
     
 }
 
+// MARK: Custom Pin Annotation
+
 class PinAnnotation : NSObject, MKAnnotation {
     private var coord: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    private var pinAnnotations = [PinAnnotation]()
     
     var coordinate: CLLocationCoordinate2D {
         get {
@@ -137,5 +181,6 @@ class PinAnnotation : NSObject, MKAnnotation {
     func setCoordinate(newCoordinate: CLLocationCoordinate2D) {
         self.coord = newCoordinate
     }
+    
 }
 
