@@ -121,7 +121,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 arrowButton.frame.size.width = 25
                 arrowButton.frame.size.height = 25
                 arrowButton.setImage(UIImage(named: "icons8-Forward Filled-50"), for: .normal)
-                arrowButton.addTarget(self, action: #selector(didClickPhotoAlbum), for: .touchUpInside)
                 pinView!.rightCalloutAccessoryView = arrowButton
                 
                 // Button to delete the pin annotation
@@ -150,7 +149,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
             if let annotation = view.annotation as? PinAnnotation {
                 Pins.sharedInstance.pins = Pins.sharedInstance.pins.filter { $0.id != annotation.id }
                 self.annotations = self.annotations.filter { $0.id != annotation.id }
-                print("Deleted? ", annotation.id, Pins.sharedInstance.pins)
                 mapView.removeAnnotation(annotation)
             }
             
@@ -174,13 +172,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
             controller.longitude = self.longitude!
             
         }
-        
-    }
-    
-    func didClickPhotoAlbum(button: UIButton) {
-        
-        
-        
     }
     
 }
