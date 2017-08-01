@@ -105,7 +105,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
         let reuseId = "pin"
         
         if annotation is PinAnnotation {
-        
+            
             var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
             
             if pinView == nil {
@@ -158,7 +158,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
         
         }
 
-        
     }
     
     // MARK: Segue

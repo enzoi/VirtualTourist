@@ -28,6 +28,7 @@ struct Pin {
         
         let pinAnnotation = PinAnnotation()
         pinAnnotation.setCoordinate(newCoordinate: CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude))
+        pinAnnotation.title = "Photo Album"
         
         return pinAnnotation
     }

@@ -49,6 +49,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback,
             Constants.FlickrParameterKeys.Latitude: self.latitude!,
             Constants.FlickrParameterKeys.Longitude: self.longitude!,
+            Constants.FlickrParameterKeys.Radius: 5,
             Constants.FlickrParameterKeys.PerPage: 21, // 3 X 7 = 21 photos displayed in collection view
             Constants.FlickrParameterKeys.Page: 1
             ] // as! [String : Any]
@@ -96,7 +97,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         // Get cell after downloading image data using image urls
-        
         let reuseIdentifier = "photoViewCell"
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoViewCell
         
