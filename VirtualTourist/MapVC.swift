@@ -37,10 +37,13 @@ class MapVC: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        print(Pins.sharedInstance.pins)
+        
         // Get all existing pin annotations
         self.activityIndicator.startAnimating()
         
         mapView.removeAnnotations(mapView.annotations)
+        
         let pins = Pins.sharedInstance.pins
         
         if pins.count != 0 { // There are pins already
@@ -76,10 +79,12 @@ class MapVC: UIViewController, MKMapViewDelegate {
             // Save pin
             let pin = Pin(dictionary: ["latitude": newCoordinates.latitude, "longitude": newCoordinates.longitude])
             Pins.sharedInstance.pins.append(pin)
+            print("Added", Pins.sharedInstance.pins)
             
             // Get pin annotation
             let pinAnnotation = PinAnnotation()
             pinAnnotation.setCoordinate(newCoordinate: newCoordinates)
+            pinAnnotation.id = pin.id
             pinAnnotation.title = "Photo Album"
             
             // Add it to Map View
@@ -107,16 +112,19 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 
                 pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
                 pinView!.canShowCallout = true
+                pinView!.isDraggable = true
                 pinView!.pinTintColor = .red
                 pinView!.frame.size.height = 30
                 
+                // Button to lead to the photo album
                 let arrowButton = UIButton(type: .custom)
                 arrowButton.frame.size.width = 25
                 arrowButton.frame.size.height = 25
                 arrowButton.setImage(UIImage(named: "icons8-Forward Filled-50"), for: .normal)
                 arrowButton.addTarget(self, action: #selector(didClickPhotoAlbum), for: .touchUpInside)
                 pinView!.rightCalloutAccessoryView = arrowButton
-            
+                
+                // Button to delete the pin annotation
                 let deleteButton = UIButton(type: .custom)
                 deleteButton.backgroundColor = UIColor.red
                 deleteButton.frame.size.width = 50
@@ -136,9 +144,23 @@ class MapVC: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        if let annotation = view.annotation as? PinAnnotation {
-            mapView.removeAnnotation(annotation)
+        
+        if control == view.leftCalloutAccessoryView  { // Left Button Tapped
+            
+            if let annotation = view.annotation as? PinAnnotation {
+                Pins.sharedInstance.pins = Pins.sharedInstance.pins.filter { $0.id != annotation.id }
+                self.annotations = self.annotations.filter { $0.id != annotation.id }
+                print("Deleted? ", annotation.id, Pins.sharedInstance.pins)
+                mapView.removeAnnotation(annotation)
+            }
+            
+        } else { // Right Button Tapped
+            
+            performSegue(withIdentifier: "photoAlbumVC", sender: self)
+        
         }
+
+        
     }
     
     // MARK: Segue
@@ -157,7 +179,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
     
     func didClickPhotoAlbum(button: UIButton) {
         
-        performSegue(withIdentifier: "photoAlbumVC", sender: self)
+        
         
     }
     
@@ -175,6 +197,7 @@ class PinAnnotation : NSObject, MKAnnotation {
         }
     }
     
+    var id: String?
     var title: String?
     var subtitle: String?
     

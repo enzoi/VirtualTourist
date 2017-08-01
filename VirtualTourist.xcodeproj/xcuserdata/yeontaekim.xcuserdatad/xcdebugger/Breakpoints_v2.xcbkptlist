@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VirtualTourist/MapVC.swift"
-            timestampString = "523264805.228326"
+            timestampString = "523312277.118532"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
             landmarkName = "mapView(_:viewFor:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VirtualTourist/PhotoAlbumVC.swift"
-            timestampString = "523222492.864521"
+            timestampString = "523299255.914453"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "191"
-            endingLineNumber = "191"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
             landmarkName = "PhotoViewCell"
             landmarkType = "3">
          </BreakpointContent>

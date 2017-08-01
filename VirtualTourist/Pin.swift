@@ -11,6 +11,7 @@ import MapKit
 
 struct Pin {
 
+    var id: String
     var latitude: Double
     var longitude: Double
     
@@ -18,6 +19,7 @@ struct Pin {
     
     init(dictionary: [String:Any]) {
         
+        id = UUID().uuidString
         latitude = dictionary["latitude"] as? Double ?? 0.0
         longitude = dictionary["longitude"] as? Double ?? 0.0
     }

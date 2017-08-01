@@ -187,7 +187,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
 
 class PhotoViewCell: UICollectionViewCell {
 
-    
     @IBOutlet weak var imageView: UIImageView!
     
 }
