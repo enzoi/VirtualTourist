@@ -10,22 +10,35 @@ import UIKit
 import MapKit
 
 
-class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     @IBOutlet weak var detailMapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
 
+    var store = PhotoStore()
+    let photoDataSource = PhotoDataSource()
+    
     var annotation = MKPointAnnotation()
     var latitude: Double?
     var longitude: Double?
-    var methodParameters: [String: Any]?
-
+    
+    // Flickr Parameter
+    var methodParameters: [String: Any] =  [
+        Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
+        Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
+        Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
+        Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
+        Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback,
+        Constants.FlickrParameterKeys.Radius: Constants.FlickrParameterValues.Radius,
+        Constants.FlickrParameterKeys.PerPage: Constants.FlickrParameterValues.PerPage,
+        Constants.FlickrParameterKeys.Page: Constants.FlickrParameterValues.Page
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        collectionView.dataSource = self
+        collectionView.dataSource = photoDataSource
         collectionView.delegate = self
         
         // Span to zoom(code below created based on the solution from https://stackoverflow.com/questions/39615416/swift-span-zoom)
@@ -34,27 +47,35 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         detailMapView.setRegion(region, animated: true)
         
         let pinLocation = CLLocationCoordinate2D(latitude: self.latitude!, longitude: self.longitude!)
-        
         self.annotation.coordinate = pinLocation
         detailMapView.addAnnotation(annotation)
         
-        // Flickr Parameter
-        methodParameters = [
-            Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.SearchMethod,
-            Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
-            Constants.FlickrParameterKeys.BoundingBox: bboxString(),
-            Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
-            Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
-            Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
-            Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback,
-            Constants.FlickrParameterKeys.Latitude: self.latitude!,
-            Constants.FlickrParameterKeys.Longitude: self.longitude!,
-            Constants.FlickrParameterKeys.Radius: 5,
-            Constants.FlickrParameterKeys.PerPage: 21, // 3 X 7 = 21 photos displayed in collection view
-            Constants.FlickrParameterKeys.Page: 1
-            ] // as! [String : Any]
-        
         flowLayoutSetup()
+        
+        // Get the coordinate
+        methodParameters[Constants.FlickrParameterKeys.Latitude] = self.latitude!
+        methodParameters[Constants.FlickrParameterKeys.Longitude] = self.longitude!
+        
+        // Fetch Flickr Photos
+        updateDataSource()
+    }
+    
+    private func updateDataSource() {
+        
+        let url = flickrURLFromParameters(methodParameters)
+        
+        self.store.fetchFlickrPhotos(fromParameters: url) { (photosResult) -> Void in
+        
+            switch photosResult {
+            case let .success(photos):
+                self.photoDataSource.photos = photos
+                print("photos: ", photos)
+            case let .failure(error):
+                print(error)
+                self.photoDataSource.photos.removeAll()
+            }
+            self.collectionView.reloadSections(IndexSet(integer: 0))
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -90,52 +111,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         return 1
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 21 // Display 21 images
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        // Get cell after downloading image data using image urls
-        let reuseIdentifier = "photoViewCell"
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoViewCell
-        
-        let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
-        activityIndicator.center = CGPoint(x: cell.contentView.frame.size.width / 2, y: cell.contentView.frame.size.height / 2)
-        activityIndicator.color = UIColor.lightGray
-        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        cell.addSubview(activityIndicator)
-        
-        activityIndicator.startAnimating()
-        
-        if cell.imageView.image != nil {
-            
-        } else {
-
-            FlickrClient.sharedInstance().getFlickrImage(self.methodParameters!, withPageNumber: 10) { (success, error) in
-                
-                if (success != nil) { // Successfully download imageURLs -> Get an image for the cell
-                    
-                    DispatchQueue.global(qos: .background).async {
-                        let imageURL = Photos.sharedInstance.imageUrls[indexPath.row]
-                        let data = try? Data(contentsOf: imageURL)
-                        let image = UIImage(data: data!)!
-                        
-                        DispatchQueue.main.async {
-                            activityIndicator.stopAnimating()
-                            cell.imageView?.image = image
-                        }
-                    }
-                    
-                } else {
-                    print(error)
-                }
-            }
-        }
-        
-        return cell
-    }
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath:IndexPath) {
         
         let cell = collectionView.cellForItem(at: indexPath) as! PhotoViewCell
@@ -152,10 +127,10 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         // TODO: Replace existing photo with new one when selected
         // Get another photos from the results
 
-        let randomPhotoIndex = Int(arc4random_uniform(UInt32(Photos.sharedInstance.imageUrls.count)))
+        let randomPhotoIndex = Int(arc4random_uniform(UInt32(self.photoDataSource.photos.count))) // Page Number?
         
         DispatchQueue.global(qos: .background).async {
-            let imageURL = Photos.sharedInstance.imageUrls[randomPhotoIndex]
+            let imageURL = self.photoDataSource.photos[randomPhotoIndex].remoteURL
             let data = try? Data(contentsOf: imageURL)
             let image = UIImage(data: data!)!
             
@@ -167,19 +142,23 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
     }
     
-    // MARK: Helper for Creating a URL from Parameters
-    
-    private func bboxString() -> String {
-        // ensure bbox is bounded by minimum and maximums
-        if let latitude = self.latitude, let longitude = self.longitude {
-            let minimumLon = max(longitude - Constants.Flickr.SearchBBoxHalfWidth, Constants.Flickr.SearchLonRange.0)
-            let minimumLat = max(latitude - Constants.Flickr.SearchBBoxHalfHeight, Constants.Flickr.SearchLatRange.0)
-            let maximumLon = min(longitude + Constants.Flickr.SearchBBoxHalfWidth, Constants.Flickr.SearchLonRange.1)
-            let maximumLat = min(latitude + Constants.Flickr.SearchBBoxHalfHeight, Constants.Flickr.SearchLatRange.1)
-            return "\(minimumLon),\(minimumLat),\(maximumLon),\(maximumLat)"
-        } else {
-            return "0,0,0,0"
+    func flickrURLFromParameters(_ parameters: [String:Any]) -> URL {
+        
+        var components = URLComponents()
+        components.scheme = Constants.Flickr.APIScheme
+        components.host = Constants.Flickr.APIHost
+        components.path = Constants.Flickr.APIPath
+        components.queryItems = [URLQueryItem]()
+        
+        let queryMethod = URLQueryItem(name: Constants.FlickrParameterKeys.Method, value: Constants.FlickrParameterValues.SearchMethod)
+        components.queryItems!.append(queryMethod)
+        
+        for (key, value) in parameters {
+            let queryItem = URLQueryItem(name: key, value: "\(value)")
+            components.queryItems!.append(queryItem)
         }
+        
+        return components.url!
     }
 
 }
@@ -191,22 +170,3 @@ class PhotoViewCell: UICollectionViewCell {
     
 }
 
-extension UIImageView {
-    func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit) {
-        contentMode = mode
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
-
-                let data = data, error == nil,
-                let image = UIImage(data: data)
-                else { return }
-            DispatchQueue.main.async() { () -> Void in
-                self.image = image
-            }
-            }.resume()
-    }
-    func downloadedFrom(link: String, contentMode mode: UIViewContentMode = .scaleAspectFit) {
-        guard let url = URL(string: link) else { return }
-        downloadedFrom(url: url, contentMode: mode)
-    }
-}
