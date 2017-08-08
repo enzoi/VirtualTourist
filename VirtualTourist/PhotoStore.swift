@@ -67,8 +67,6 @@ class PhotoStore {
         let session = URLSession.shared
         let request = URLRequest(url: url)
         
-        print("request: ", request)
-        
         // create network request
         let task = session.dataTask(with: request) { (data, response, error) in
             
@@ -98,11 +96,8 @@ class PhotoStore {
                 return
             }
             
-            print("data: ", data)
-            
-            let result = FlickrClient.getFlickrPhotos(fromJSON: data) // Get [Photo] Array
-            
-            print("result: ", result)
+            // Get [Photo] Array
+            let result = FlickrClient.getFlickrPhotos(fromJSON: data)
             
             OperationQueue.main.addOperation {
                 completion(result)
