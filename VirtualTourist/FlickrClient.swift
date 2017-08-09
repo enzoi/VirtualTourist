@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 enum FlickrError: Error {
     case invalidJSONData
@@ -25,7 +26,7 @@ class FlickrClient : NSObject {
     
     // MARK: Flickr API (Get Images from Image URLs)
 
-    static func getFlickrPhotos(fromJSON data: Data) -> PhotosResult {
+    static func getFlickrPhotos(fromJSON data: Data, into context: NSManagedObjectContext) -> PhotosResult {
         
         print("getFlickrPhotos function called")
         
@@ -62,7 +63,7 @@ class FlickrClient : NSObject {
             var finalPhotos = [Photo]()
             for photoItem in photosArray { // photoItem [String: AnyObject]
             
-                if let photo = getFlickrPhoto(fromJSON: photoItem) {
+                if let photo = getFlickrPhoto(fromJSON: photoItem, into: context) {
                     print("photo: ", photo)
                     finalPhotos.append(photo)
                 }
@@ -75,16 +76,20 @@ class FlickrClient : NSObject {
 
     }
     
-    private static func getFlickrPhoto(fromJSON json: [String : Any]) -> Photo? {
+    private static func getFlickrPhoto(fromJSON json: [String : Any], into context: NSManagedObjectContext) -> Photo? {
         guard let url = json["url_m"] else {
             // Don't have enough information to construct a Photo
             return nil
         }
         
-        let photoID = UUID().uuidString
-        let remoteURL = URL(string: url as! String)!
-    
-        return Photo(photoID: photoID, remoteURL: remoteURL)
+        var photo: Photo!
+        context.performAndWait {
+            photo = Photo(context: context)
+            photo.photoID = UUID().uuidString
+            photo.remoteURL = url as! NSURL
+        }
+        
+        return photo
     }
 
     

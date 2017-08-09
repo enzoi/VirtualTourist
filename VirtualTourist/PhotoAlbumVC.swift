@@ -131,7 +131,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
         DispatchQueue.global(qos: .background).async {
             let imageURL = self.photoDataSource.photos[randomPhotoIndex].remoteURL
-            let data = try? Data(contentsOf: imageURL)
+            let data = try? Data(contentsOf: imageURL as! URL)
             let image = UIImage(data: data!)!
             
             DispatchQueue.main.async {

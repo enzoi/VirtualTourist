@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 enum ImageResult {
     case success(UIImage)
@@ -25,12 +26,22 @@ enum PhotosResult {
 
 class PhotoStore {
     
+    let persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "VirtualTourist")
+        container.loadPersistentStores { (description, error) in
+            if let error = error {
+                print("Error setting up Core Data (\(error)).")
+            }
+        }
+        return container
+    }()
+    
     private let session: URLSession = {
         let config = URLSessionConfiguration.default
         return URLSession(configuration: config)
     }()
     
-    func processImageRequest(data: Data?, error: Error?) -> ImageResult {
+    private func processImageRequest(data: Data?, error: Error?) -> ImageResult {
         
         guard
             let imageData = data,
@@ -50,7 +61,7 @@ class PhotoStore {
     func fetchImage(for photo: Photo, completion: @escaping (ImageResult) -> Void) {
         
         let photoURL = photo.remoteURL
-        let request = URLRequest(url: photoURL)
+        let request = URLRequest(url: photoURL as! URL)
         
         let task = session.dataTask(with: request) {
             (data, response, error) -> Void in
@@ -97,8 +108,15 @@ class PhotoStore {
             }
             
             // Get [Photo] Array
-            let result = FlickrClient.getFlickrPhotos(fromJSON: data)
+            var result = FlickrClient.getFlickrPhotos(fromJSON: data, into: self.persistentContainer.viewContext)
             
+            if case .success = result {
+                do {
+                    try self.persistentContainer.viewContext.save()
+                } catch let error {
+                    result = .failure(error)
+                }
+            }
             OperationQueue.main.addOperation {
                 completion(result)
             }
