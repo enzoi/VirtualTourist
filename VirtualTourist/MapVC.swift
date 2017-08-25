@@ -212,7 +212,11 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 moc.performAndWait {
                     let fetchedPins = try? fetchRequest.execute()
                     let pin = fetchedPins?[0]
+                    print(pin!)
                     moc.delete(pin!)
+                    
+                    //TODO: Remove pin from mapView
+                    self.mapView.removeAnnotation(annotation)
                 }
                     
                 do {
