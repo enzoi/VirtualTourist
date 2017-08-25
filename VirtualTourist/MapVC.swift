@@ -17,23 +17,10 @@ class MapVC: UIViewController, MKMapViewDelegate {
     
     var store: PhotoStore!
     var pin: Pin?
-    var currentPinID: NSManagedObjectID?
     let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     var annotations = [PinAnnotation]()
     var longPressGesture: UILongPressGestureRecognizer? = nil
     
-    fileprivate lazy var fetchedResultsController: NSFetchedResultsController<Pin> = {
-        // Initialize Fetch Request
-        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-        
-        // Initialize Fetched Results Controller
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.store.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        
-        // Configure Fetched Results Controller
-        fetchedResultsController.delegate = self
-        
-        return fetchedResultsController
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,6 +68,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
                     
                     performUIUpdatesOnMain {
                         self.mapView.addAnnotations(annotations)
+                        print(self.mapView.annotations)
                     }
                     print("all pins fetched")
                     
@@ -99,6 +87,8 @@ class MapVC: UIViewController, MKMapViewDelegate {
     
     func savePin(latitude: Double, longitude: Double) {
         
+        mapView.delegate = self
+        
         let moc = store.persistentContainer.viewContext
         
         moc.perform {
@@ -107,27 +97,18 @@ class MapVC: UIViewController, MKMapViewDelegate {
             pin.longitude = longitude
             pin.pinID = UUID().uuidString
             
-            let pinAnnotation = pin.getPinAnnotationsFromPin(pin: pin)
-            self.annotations.append(pinAnnotation)
-            
-            performUIUpdatesOnMain {
-                // When the array is complete, we add the annotations to the map.
-                self.mapView.addAnnotations(self.annotations)
-                self.activityIndicator.stopAnimating()
-            }
-            
             do {
                 try moc.save()
             } catch {
                 moc.rollback()
             }
-            
-            print("saved pin: ", pin.pinID)
-            
+
+            let pinAnnotation = pin.getPinAnnotationsFromPin(pin: pin)
+            self.mapView.addAnnotation(pinAnnotation)
+            print("saved pin: ", pin)
         }
 
     }
-    
     
     func addAnnotation(gestureRecognizer:UIGestureRecognizer){
         
@@ -141,7 +122,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
             let lat = newCoordinates.latitude
             let lon = newCoordinates.longitude
             
-            print("lat: ", lat, "lon: ", lon)
             savePin(latitude: lat, longitude: lon)
             
         }
@@ -160,6 +140,8 @@ class MapVC: UIViewController, MKMapViewDelegate {
         let reuseId = "pin"
         
         if annotation is PinAnnotation {
+            
+            print("Any annotation for the map view??")
             
             var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
             
@@ -211,12 +193,15 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 
                 moc.performAndWait {
                     let fetchedPins = try? fetchRequest.execute()
-                    let pin = fetchedPins?[0]
-                    print(pin!)
-                    moc.delete(pin!)
                     
-                    //TODO: Remove pin from mapView
-                    self.mapView.removeAnnotation(annotation)
+                    if let selectedPin = fetchedPins?.first {
+                        self.pin = nil
+                        print(selectedPin)
+                        // self.mapView.removeAnnotation(annotation)
+                        moc.delete(selectedPin)
+                        mapView.removeAnnotation(annotation)
+                    }
+                
                 }
                     
                 do {
@@ -272,41 +257,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
     
 }
 
-extension MapVC: NSFetchedResultsControllerDelegate {
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        
-        guard let pin = anObject as? Pin else {
-            preconditionFailure("All changes observed in the map view controller should be for Pin instances")
-        }
-        
-        let lat = pin.latitude
-        let lon = pin.longitude
-        
-        // TODO: create pin annotation with pin
-        let pinAnnotation = PinAnnotation()
-        pinAnnotation.setCoordinate(newCoordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon))
-        pinAnnotation.id = pin.pinID
-        pinAnnotation.title = "Photo Album"
-        
-        switch type {
-        case .insert:
-            mapView.addAnnotation(pinAnnotation)
-        
-        case .delete:
-            mapView.removeAnnotation(pinAnnotation)
-        
-        case .update:
-            mapView.removeAnnotation(pinAnnotation)
-            mapView.addAnnotation(pinAnnotation)
-        
-        case .move:
-            mapView.removeAnnotation(pinAnnotation)
-            mapView.addAnnotation(pinAnnotation)
-        }
-    }
-}
-
 
 // MARK: Custom Pin Annotation
 
@@ -322,7 +272,6 @@ class PinAnnotation : NSObject, MKAnnotation {
     
     var id: String?
     var title: String?
-    var subtitle: String?
     
     func setCoordinate(newCoordinate: CLLocationCoordinate2D) {
         self.coord = newCoordinate

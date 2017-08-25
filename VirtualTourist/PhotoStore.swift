@@ -67,38 +67,6 @@ class PhotoStore {
     }
     
     
-//    func processPhotosRequest(data: Data?, error: Error?, completion: @escaping (PhotosResult) -> Void) {
-//        
-//        guard let jsonData = data else {
-//            completion(.failure(error!))
-//            return
-//        }
-//        
-//        self.persistentContainer.performBackgroundTask {
-//            (context) in
-//            
-//            let result = FlickrClient.getFlickrPhotos(pin: <#Pin#>, fromJSON: jsonData, into: context)
-//            
-//            do {
-//                try context.save()
-//            } catch {
-//                print("Error saving to Core Data: \(error).")
-//                completion(.failure(error))
-//                return
-//            }
-//            
-//            switch result {
-//            case let .success(photos):
-//                let photoIDs = photos.map { return $0.objectID }
-//                let viewContext = self.persistentContainer.viewContext
-//                let viewContextPhotos = photoIDs.map { return viewContext.object(with: $0) } as! [Photo]
-//                completion(.success(viewContextPhotos))
-//            case .failure(_):
-//                completion(result)
-//            }
-//        }
-//    }
-    
     func fetchImage(for photo: Photo, completion: @escaping (ImageResult) -> Void) {
         
         print("fetchImage is called")
