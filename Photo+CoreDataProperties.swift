@@ -22,13 +22,3 @@ extension Photo {
 
 }
 
-//struct Photo {
-//    
-//    let remoteURL: URL
-//    let photoID: String
-//    
-//    init(photoID: String, remoteURL: URL) {
-//        self.photoID = photoID
-//        self.remoteURL = remoteURL
-//    }
-//}

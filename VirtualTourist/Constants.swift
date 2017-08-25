@@ -53,7 +53,7 @@ struct Constants {
         static let MediumURL = "url_m"
         static let UseSafeSearch = "1"
         static let PerPage = "21"
-        static let Radius = "5"
+        static let Radius = "10"
         static let Page = "1"
         
     }

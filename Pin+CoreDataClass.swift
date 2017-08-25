@@ -8,30 +8,23 @@
 
 import Foundation
 import CoreData
+import MapKit
 
 @objc(Pin)
 public class Pin: NSManagedObject {
-
+    
+    func getPinAnnotationsFromPin(pin: Pin) -> PinAnnotation {
+        
+        let pinAnnotation = PinAnnotation()
+        pinAnnotation.setCoordinate(newCoordinate: CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude))
+        pinAnnotation.title = "Photo Album"
+        pinAnnotation.id = pin.pinID
+        
+        print("pin annotation id: ", pinAnnotation.id!)
+        
+        return pinAnnotation
+    }
+    
 }
 
-//var pinID: String
-//var latitude: Double
-//var longitude: Double
-//
-//// MARK: Initializers
-//
-//init(dictionary: [String:Any]) {
-//    
-//    pinID = UUID().uuidString
-//    latitude = dictionary["latitude"] as? Double ?? 0.0
-//    longitude = dictionary["longitude"] as? Double ?? 0.0
-//}
-//
-//func getPinAnnotationsFromPin(pin: Pin) -> PinAnnotation {
-//    
-//    let pinAnnotation = PinAnnotation()
-//    pinAnnotation.setCoordinate(newCoordinate: CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude))
-//    pinAnnotation.title = "Photo Album"
-//    
-//    return pinAnnotation
-//}
+

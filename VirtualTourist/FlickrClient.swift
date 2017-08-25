@@ -26,16 +26,16 @@ class FlickrClient : NSObject {
     
     // MARK: Flickr API (Get Images from Image URLs)
 
-    static func getFlickrPhotos(fromJSON data: Data, into context: NSManagedObjectContext) -> PhotosResult {
+    static func getFlickrPhotos(pin: Pin, fromJSON data: Data, into context: NSManagedObjectContext) -> PhotosResult {
         
-        print("getFlickrPhotos function called")
+        print("getFlickrPhotos is called")
         
         // parse the data
         let parsedResult: [String:AnyObject]!
         
         do {
             parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
-        
+            print(parsedResult)
             /* GUARD: Did Flickr return an error (stat != ok)? */
             guard let stat = parsedResult[Constants.FlickrResponseKeys.Status] as? String, stat == Constants.FlickrResponseValues.OKStatus else {
                 // displayError("Flickr API returned an error. See error code and message in \(parsedResult)")
@@ -57,17 +57,37 @@ class FlickrClient : NSObject {
             if photosArray.count == 0 {
                 return .failure(FlickrError.invalidJSONData)
             }
-            
-            print("photosArray: ", photosArray)
-                
+
             var finalPhotos = [Photo]()
-            for photoItem in photosArray { // photoItem [String: AnyObject]
             
+            for photoItem in photosArray { // photoItem [String: AnyObject]
+                
                 if let photo = getFlickrPhoto(fromJSON: photoItem, into: context) {
                     print("photo: ", photo)
+                    
+                    //TODO: need to add the fetched photos to the current pin
+                    let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+                    let predicate = NSPredicate(format: "\(#keyPath(Pin.pinID)) == %@", pin.pinID!)
+                    fetchRequest.predicate = predicate
+                        
+                    context.perform {
+                            
+                        // Get current pin and add the photo to the pin
+                        let fetchedPin = try? fetchRequest.execute()
+                        fetchedPin?[0].addToPhotos(photo)
+                    
+                        do {
+                            try context.save()
+                        } catch {
+                            context.rollback()
+                        }
+                    }
+                        
                     finalPhotos.append(photo)
                 }
             }
+
+            print("final photos: ", finalPhotos)
             return .success(finalPhotos)
         
         } catch let error {
@@ -77,18 +97,43 @@ class FlickrClient : NSObject {
     }
     
     private static func getFlickrPhoto(fromJSON json: [String : Any], into context: NSManagedObjectContext) -> Photo? {
-        guard let url = json["url_m"] else {
-            // Don't have enough information to construct a Photo
+        
+        print("getFlickrPhoto is called")
+        print(json)
+        
+        guard
+            let photoID = json["id"] as? String,
+            let url = json["url_m"] as? String
+        else {
             return nil
         }
         
+        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
+        let predicate = NSPredicate(format: "\(#keyPath(Photo.photoID)) == \(photoID)")
+        fetchRequest.predicate = predicate
+        print(fetchRequest)
+        
+        var fetchedPhotos: [Photo]?
+        
+        // Fetch photos to see if there is existing photo available
+        context.performAndWait {
+            fetchedPhotos = try? fetchRequest.execute()
+        }
+        
+        // Return existing photo if available
+        if let existingPhoto = fetchedPhotos?.first {
+            print("existingPhoto: ", existingPhoto)
+            return existingPhoto
+        }
+        
+        // Otherwise, create NSManagedObject instance
         var photo: Photo!
         context.performAndWait {
             photo = Photo(context: context)
-            photo.photoID = UUID().uuidString
-            photo.remoteURL = url as! NSURL
+            photo.remoteURL = NSURL(string: url)
+            photo.photoID = photoID
         }
-        
+
         return photo
     }
 

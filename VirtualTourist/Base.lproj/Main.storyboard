@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="W2Z-lE-pT2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="W2Z-lE-pT2">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -87,16 +87,22 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zbB-WG-QfJ">
                                                     <rect key="frame" x="0.0" y="0.0" width="125" height="126"/>
                                                 </imageView>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="QOF-0c-X11">
+                                                    <rect key="frame" x="52" y="53" width="20" height="20"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                         </view>
                                         <constraints>
+                                            <constraint firstItem="QOF-0c-X11" firstAttribute="centerY" secondItem="WCb-wh-TyM" secondAttribute="centerY" id="5V1-30-NYd"/>
                                             <constraint firstAttribute="trailing" secondItem="zbB-WG-QfJ" secondAttribute="trailing" id="7Mm-ZB-RIa"/>
+                                            <constraint firstItem="QOF-0c-X11" firstAttribute="centerX" secondItem="WCb-wh-TyM" secondAttribute="centerX" id="ErT-2s-Ec7"/>
                                             <constraint firstItem="zbB-WG-QfJ" firstAttribute="top" secondItem="WCb-wh-TyM" secondAttribute="top" id="ME8-PJ-37d"/>
                                             <constraint firstItem="zbB-WG-QfJ" firstAttribute="leading" secondItem="WCb-wh-TyM" secondAttribute="leading" id="cr7-ad-67z"/>
                                             <constraint firstAttribute="bottom" secondItem="zbB-WG-QfJ" secondAttribute="bottom" id="ojb-Rv-k1g"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="imageView" destination="zbB-WG-QfJ" id="Dny-30-jfy"/>
+                                            <outlet property="spinner" destination="QOF-0c-X11" id="I5n-jY-Vh7"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

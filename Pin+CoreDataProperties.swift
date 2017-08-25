@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import MapKit
 
 
 extension Pin {
@@ -38,4 +39,12 @@ extension Pin {
     @objc(removePhotos:)
     @NSManaged public func removeFromPhotos(_ values: NSSet)
 
+}
+
+extension Pin: MKAnnotation {
+    public var coordinate: CLLocationCoordinate2D {
+        let lat = CLLocationDegrees(latitude)
+        let lon = CLLocationDegrees(longitude)
+        return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+    }
 }
