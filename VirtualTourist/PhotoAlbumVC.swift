@@ -122,18 +122,20 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
 
     func flowLayoutSetup() {
         
-        let space:CGFloat = 3.0
-        var dimension:CGFloat
-        
-        if view.frame.size.height > view.frame.size.width { // portrait mode
-            dimension = (view.frame.size.width - (2 * space)) / 3.0
-        } else { // landscape mode
-            dimension = (view.frame.size.width - (4 * space)) / 5.0
+        DispatchQueue.main.async() {
+            let space:CGFloat = 3.0
+            var dimension:CGFloat
+            
+            if self.view.frame.size.height > self.view.frame.size.width { // portrait mode
+                dimension = (self.view.frame.size.width - (2 * space)) / 3.0
+            } else { // landscape mode
+                dimension = (self.view.frame.size.width - (4 * space)) / 5.0
+            }
+            
+            self.flowLayout.minimumInteritemSpacing = space
+            self.flowLayout.minimumLineSpacing = space
+            self.flowLayout.itemSize = CGSize(width: dimension, height: dimension)
         }
-        
-        flowLayout.minimumInteritemSpacing = space
-        flowLayout.minimumLineSpacing = space
-        flowLayout.itemSize = CGSize(width: dimension, height: dimension)
         
     }
 
