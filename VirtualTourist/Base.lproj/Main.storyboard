@@ -88,7 +88,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="125" height="126"/>
                                                     <color key="backgroundColor" red="0.47489689086294407" green="0.47489689086294407" blue="0.47489689086294407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="QOF-0c-X11">
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="QOF-0c-X11">
                                                     <rect key="frame" x="52" y="53" width="20" height="20"/>
                                                 </activityIndicatorView>
                                             </subviews>

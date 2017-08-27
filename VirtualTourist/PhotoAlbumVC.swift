@@ -174,6 +174,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
         let cell = collectionView.cellForItem(at: indexPath) as! PhotoViewCell
         cell.imageView.image = nil
+        cell.spinner.startAnimating()
         
         let photo = photoDataSource.photos[indexPath.row]
         pin.removeFromPhotos(photo)
