@@ -226,7 +226,8 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
 
             // Update collection view after removing the photo
             self.collectionView.reloadSections(IndexSet(integer: 0))
-            barButton.title == "New Collection"
+            barButton.title = "New Collection"
+            selectedIndexPaths = []
         }
     
     }
