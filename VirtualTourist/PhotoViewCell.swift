@@ -26,11 +26,13 @@ class PhotoViewCell: UICollectionViewCell {
     }
     
     func update(with image: UIImage?) {
+        
+        spinner.startAnimating()
+        
         if let imageToDisplay = image {
             spinner.stopAnimating()
             imageView.image = imageToDisplay
         } else {
-            spinner.startAnimating()
             imageView.image = nil
         }
     }

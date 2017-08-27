@@ -31,6 +31,8 @@ enum PinsResult {
 
 class PhotoStore {
     
+    let imageStore = ImageStore()
+    
     let persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Model")
         container.loadPersistentStores { (description, error) in
@@ -71,6 +73,18 @@ class PhotoStore {
         
         print("fetchImage is called")
         
+        // If there is an existing image
+        let photoKey = photo.photoID
+        if let image = imageStore.image(forKey: photoKey!) {
+            
+            OperationQueue.main.addOperation {
+                completion(.success(image))
+            }
+            
+            return
+        }
+        
+        // Otherwise, get an image using URL
         let photoURL = photo.remoteURL
         let request = URLRequest(url: photoURL as! URL)
         
@@ -78,7 +92,15 @@ class PhotoStore {
             (data, response, error) -> Void in
             
             let result = self.processImageRequest(data: data, error: error)
-            completion(result)
+            
+            // Store the image in cache
+            if case let .success(image) = result {
+                self.imageStore.setImage(image, forKey: photoKey!)
+            }
+            
+            OperationQueue.main.addOperation {
+                completion(result)
+            }
         }
         task.resume()
     }

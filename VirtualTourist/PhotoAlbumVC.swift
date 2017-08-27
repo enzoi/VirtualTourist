@@ -18,6 +18,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
 
     var store: PhotoStore!
+    var imageStore: ImageStore!
     var moc: NSManagedObjectContext!
     var pin: Pin!
 
@@ -174,13 +175,12 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         let cell = collectionView.cellForItem(at: indexPath) as! PhotoViewCell
         cell.imageView.image = nil
         
-        // TODO: Remove the image from core data
         let photo = photoDataSource.photos[indexPath.row]
         pin.removeFromPhotos(photo)
         
         // TODO: check if the photo is already in
         
-        let randomPhotoIndex = Int(arc4random_uniform(UInt32(self.photoDataSource.photos.count))) // Page Number?
+        let randomPhotoIndex = Int(arc4random_uniform(UInt32(self.photoDataSource.photos.count)))
         
         DispatchQueue.global(qos: .background).async {
             let imageURL = self.photoDataSource.photos[randomPhotoIndex].remoteURL

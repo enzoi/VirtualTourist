@@ -62,9 +62,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="AYU-OU-3hL">
-                                <rect key="frame" x="0.0" y="64" width="375" height="172"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="169"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="172" id="noq-rB-o9V"/>
+                                    <constraint firstAttribute="height" constant="169" id="noq-rB-o9V"/>
                                 </constraints>
                             </mapView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5Kw-g6-SF3">
@@ -84,8 +84,9 @@
                                             <rect key="frame" x="0.0" y="0.0" width="125" height="126"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zbB-WG-QfJ">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zbB-WG-QfJ">
                                                     <rect key="frame" x="0.0" y="0.0" width="125" height="126"/>
+                                                    <color key="backgroundColor" red="0.47489689086294407" green="0.47489689086294407" blue="0.47489689086294407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="QOF-0c-X11">
                                                     <rect key="frame" x="52" y="53" width="20" height="20"/>
@@ -118,7 +119,7 @@
                             <constraint firstItem="5Kw-g6-SF3" firstAttribute="leading" secondItem="EwS-KU-h91" secondAttribute="leading" id="Bc3-7u-rNJ"/>
                             <constraint firstItem="gPA-ub-dGC" firstAttribute="top" secondItem="5Kw-g6-SF3" secondAttribute="bottom" id="Vxc-cD-crz"/>
                             <constraint firstItem="AYU-OU-3hL" firstAttribute="leading" secondItem="5Kw-g6-SF3" secondAttribute="leading" id="bdE-zp-Sqs"/>
-                            <constraint firstItem="5Kw-g6-SF3" firstAttribute="top" secondItem="AYU-OU-3hL" secondAttribute="bottom" id="cSC-yV-Lu8"/>
+                            <constraint firstItem="5Kw-g6-SF3" firstAttribute="top" secondItem="AYU-OU-3hL" secondAttribute="bottom" constant="3" id="cSC-yV-Lu8"/>
                             <constraint firstItem="AYU-OU-3hL" firstAttribute="trailing" secondItem="5Kw-g6-SF3" secondAttribute="trailing" id="g0N-m0-rps"/>
                             <constraint firstAttribute="trailing" secondItem="AYU-OU-3hL" secondAttribute="trailing" id="n1q-nN-KIa"/>
                             <constraint firstAttribute="trailing" secondItem="5Kw-g6-SF3" secondAttribute="trailing" id="uRq-xQ-T1q"/>

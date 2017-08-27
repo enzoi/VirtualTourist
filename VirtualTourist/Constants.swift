@@ -52,7 +52,7 @@ struct Constants {
         static let GalleryID = "5704-72157622566655097"
         static let MediumURL = "url_m"
         static let UseSafeSearch = "1"
-        static let PerPage = "21"
+        static let PerPage = "66"
         static let Radius = "10"
         static let Page = "1"
         
@@ -73,15 +73,5 @@ struct Constants {
     struct FlickrResponseValues {
         static let OKStatus = "ok"
     }
-    
-    // FIX: As of Swift 2.2, using strings for selectors has been deprecated. Instead, #selector(methodName) should be used.
-    /*
-     // MARK: Selectors
-     struct Selectors {
-     static let KeyboardWillShow: Selector = "keyboardWillShow:"
-     static let KeyboardWillHide: Selector = "keyboardWillHide:"
-     static let KeyboardDidShow: Selector = "keyboardDidShow:"
-     static let KeyboardDidHide: Selector = "keyboardDidHide:"
-     }
-     */
+
 }
