@@ -137,7 +137,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
     }
     
     func addLongPressGesture() {
-        self.longPressGesture?.minimumPressDuration = 1
+        self.longPressGesture?.minimumPressDuration = 2
         self.mapView.addGestureRecognizer(self.longPressGesture!)
     }
   
