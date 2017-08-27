@@ -171,29 +171,23 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath:IndexPath) {
         
         let cell = collectionView.cellForItem(at: indexPath) as! PhotoViewCell
-        cell.imageView.image = nil
-        cell.spinner.startAnimating()
-        
+    
         let photo = photoDataSource.photos[indexPath.row]
-        pin.removeFromPhotos(photo)
         
-        // TODO: check if the photo is already in
+        // TOOD: Add Alert Controller to confirm deleting the photo
         
-        let randomPhotoIndex = Int(arc4random_uniform(UInt32(self.photoDataSource.photos.count)))
         
-        DispatchQueue.global(qos: .background).async {
-            let imageURL = self.photoDataSource.photos[randomPhotoIndex].remoteURL
-            let data = try? Data(contentsOf: imageURL as! URL)
-            let image = UIImage(data: data!)!
-            
-            // Get a new image and save the image using core data
-            self.savePhoto(remoteURL: imageURL as! NSURL)
-            
-            // Update image in the collection view cell
-            DispatchQueue.main.async {
-                cell.update(with: image)
-            }
+        
+        // Remove the photo from photo data source
+        if let index = photoDataSource.photos.index(of:photo) {
+            photoDataSource.photos.remove(at: index)
         }
+        
+        // Remove the photo from core data
+        pin.removeFromPhotos(photo)
+
+        // Update collection view after removing the photo
+        self.collectionView.reloadSections(IndexSet(integer: 0))
         
     }
     
