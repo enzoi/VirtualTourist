@@ -72,9 +72,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             print("self.pin in PhotoAlbumVC: ", self.pin!)
             
             store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
-                
-                //TODO: need to add the fetched photos to the current pin 
-                
+ 
                 self.updatePhotos()
             }
         }
