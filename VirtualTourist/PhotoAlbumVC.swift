@@ -16,6 +16,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     @IBOutlet weak var detailMapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var barButton: UIBarButtonItem!
 
     var store: PhotoStore!
     var imageStore: ImageStore!
@@ -46,6 +47,8 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
         collectionView.dataSource = photoDataSource
         collectionView.delegate = self
+        
+        barButton.title = "New Collection"
         
         // Span to zoom(code below created based on the solution from https://stackoverflow.com/questions/39615416/swift-span-zoom)
         let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
@@ -170,24 +173,12 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath:IndexPath) {
         
+        barButton.title = "Remove Selected Pictures"
+        
         let cell = collectionView.cellForItem(at: indexPath) as! PhotoViewCell
-    
-        let photo = photoDataSource.photos[indexPath.row]
+        cell.alpha = 0.3
         
-        // TOOD: Add Alert Controller to confirm deleting the photo
-        
-        
-        
-        // Remove the photo from photo data source
-        if let index = photoDataSource.photos.index(of:photo) {
-            photoDataSource.photos.remove(at: index)
-        }
-        
-        // Remove the photo from core data
-        pin.removeFromPhotos(photo)
-
-        // Update collection view after removing the photo
-        self.collectionView.reloadSections(IndexSet(integer: 0))
+        selectedIndexPaths.append(indexPath)
         
     }
     
@@ -210,6 +201,36 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         return components.url!
     }
 
+    // MARK: Bar Button
+    
+    @IBAction func barButtonPressed(_ sender: Any) {
+    
+        if barButton.title == "New Collection" {
+            
+            // TODO: Fetch New Collection (Different Page?)
+            
+        } else { // barButton.title == "Remove Selected Pictures"
+            
+            // Remove the photo from photo data source
+            for indexPath in selectedIndexPaths {
+                
+                let photo = photoDataSource.photos[indexPath.row]
+                if let index = photoDataSource.photos.index(of:photo) {
+                    photoDataSource.photos.remove(at: index)
+                }
+                
+                // Remove the photo from core data
+                pin.removeFromPhotos(photo)
+                
+            }
+
+            // Update collection view after removing the photo
+            self.collectionView.reloadSections(IndexSet(integer: 0))
+            barButton.title == "New Collection"
+        }
+    
+    }
+    
 }
 
 // MARK: Core Data

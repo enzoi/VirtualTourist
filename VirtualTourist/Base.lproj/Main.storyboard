@@ -112,6 +112,19 @@
                                     <outlet property="delegate" destination="SpI-Tk-hBT" id="tS9-uS-td5"/>
                                 </connections>
                             </collectionView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S5z-qN-Nhg">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Zeq-jh-KBv"/>
+                                    <barButtonItem title="Item" id="4bf-0Q-2BL">
+                                        <connections>
+                                            <action selector="barButtonPressed:" destination="SpI-Tk-hBT" id="x36-JT-K57"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ump-io-jax"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -127,6 +140,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="barButton" destination="4bf-0Q-2BL" id="zDs-e4-F8n"/>
                         <outlet property="collectionView" destination="5Kw-g6-SF3" id="gIN-Gg-gn4"/>
                         <outlet property="detailMapView" destination="AYU-OU-3hL" id="cOl-9u-gCs"/>
                         <outlet property="flowLayout" destination="8V4-8B-8lb" id="Pzp-K5-t4s"/>
