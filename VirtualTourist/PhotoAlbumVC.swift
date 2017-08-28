@@ -38,8 +38,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
         Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback,
         Constants.FlickrParameterKeys.Radius: Constants.FlickrParameterValues.Radius,
-        Constants.FlickrParameterKeys.PerPage: Constants.FlickrParameterValues.PerPage,
-        Constants.FlickrParameterKeys.Page: Constants.FlickrParameterValues.Page
+        Constants.FlickrParameterKeys.PerPage: Constants.FlickrParameterValues.PerPage
     ]
     
     override func viewDidLoad() {
@@ -72,7 +71,9 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 else { return }
             
             let url = getURL(lat: lat, lon: lon)
-            print("self.pin in PhotoAlbumVC: ", self.pin!)
+            
+            // Get photos from the first page
+            methodParameters[Constants.FlickrParameterKeys.Page] = 1
             
             store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
  
@@ -204,10 +205,29 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     // MARK: Bar Button
     
     @IBAction func barButtonPressed(_ sender: Any) {
-    
+        
         if barButton.title == "New Collection" {
             
-            // TODO: Fetch New Collection (Different Page?)
+            // Remove photos from data source, core data
+            for photo in self.photoDataSource.photos {
+                pin.removeFromPhotos(photo)
+            }
+            
+            self.photoDataSource.photos.removeAll()
+            
+            // Get New Collection (Try next page)
+            methodParameters[Constants.FlickrParameterKeys.Page] = (methodParameters[Constants.FlickrParameterKeys.Page] as! Int) + 1
+  
+            
+            let url = flickrURLFromParameters(methodParameters)
+            print("methodParameters: ", methodParameters, "url: ", url)
+
+            store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
+                
+                self.updatePhotos()
+            }
+            
+            
             
         } else { // barButton.title == "Remove Selected Pictures"
             

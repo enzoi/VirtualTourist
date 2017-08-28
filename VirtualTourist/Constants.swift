@@ -54,7 +54,7 @@ struct Constants {
         static let UseSafeSearch = "1"
         static let PerPage = "66"
         static let Radius = "10"
-        static let Page = "1"
+        // static let Page = "1"
         
     }
     
