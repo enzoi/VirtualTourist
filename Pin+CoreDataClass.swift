@@ -20,8 +20,6 @@ public class Pin: NSManagedObject {
         pinAnnotation.title = "Photo Album"
         pinAnnotation.id = pin.pinID
         
-        print("pin annotation id: ", pinAnnotation.id!)
-        
         return pinAnnotation
     }
     

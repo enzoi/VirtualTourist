@@ -103,7 +103,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             switch photosResult {
             case let .success(photos):
                 
-                print("fetched photos: ", photos)
                 // Feed pin associated photos to collection view data source
                 self.photoDataSource.photos = photos
                 
@@ -233,7 +232,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
   
             
             let url = flickrURLFromParameters(methodParameters)
-            print("methodParameters: ", methodParameters, "url: ", url)
 
             store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
                 
@@ -274,7 +272,6 @@ extension PhotoAlbumVC {
     func savePhoto(remoteURL: NSURL) {
         
         let moc = store.persistentContainer.viewContext
-        print("moc in savePhoto: ", moc)
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
         let predicate = NSPredicate(format: "\(#keyPath(Pin.pinID)) == %@", pin.pinID!)
         fetchRequest.predicate = predicate

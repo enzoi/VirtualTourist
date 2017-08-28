@@ -77,9 +77,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
                     
                     performUIUpdatesOnMain {
                         self.mapView.addAnnotations(annotations)
-                        print(self.mapView.annotations)
                     }
-                    print("all pins fetched")
                     
                 } else {
                     print("Nothing to fetch")
@@ -203,8 +201,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
                     
                     if let selectedPin = fetchedPins?.first {
                         self.pin = nil
-                        print(selectedPin)
-                        // self.mapView.removeAnnotation(annotation)
                         moc.delete(selectedPin)
                         mapView.removeAnnotation(annotation)
                     }

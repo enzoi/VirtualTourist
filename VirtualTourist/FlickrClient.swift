@@ -28,14 +28,12 @@ class FlickrClient : NSObject {
 
     static func getFlickrPhotos(pin: Pin, fromJSON data: Data, into context: NSManagedObjectContext) -> PhotosResult {
         
-        print("getFlickrPhotos is called")
-        
         // parse the data
         let parsedResult: [String:AnyObject]!
         
         do {
             parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
-            print(parsedResult)
+
             /* GUARD: Did Flickr return an error (stat != ok)? */
             guard let stat = parsedResult[Constants.FlickrResponseKeys.Status] as? String, stat == Constants.FlickrResponseValues.OKStatus else {
                 // displayError("Flickr API returned an error. See error code and message in \(parsedResult)")
@@ -63,7 +61,6 @@ class FlickrClient : NSObject {
             for photoItem in photosArray { // photoItem [String: AnyObject]
                 
                 if let photo = getFlickrPhoto(fromJSON: photoItem, into: context) {
-                    print("photo: ", photo)
                     
                     //TODO: need to add the fetched photos to the current pin
                     let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
@@ -87,7 +84,6 @@ class FlickrClient : NSObject {
                 }
             }
 
-            print("final photos: ", finalPhotos)
             return .success(finalPhotos)
         
         } catch let error {
@@ -97,10 +93,7 @@ class FlickrClient : NSObject {
     }
     
     private static func getFlickrPhoto(fromJSON json: [String : Any], into context: NSManagedObjectContext) -> Photo? {
-        
-        print("getFlickrPhoto is called")
-        print(json)
-        
+
         guard
             let photoID = json["id"] as? String,
             let url = json["url_m"] as? String
@@ -111,7 +104,6 @@ class FlickrClient : NSObject {
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
         let predicate = NSPredicate(format: "\(#keyPath(Photo.photoID)) == \(photoID)")
         fetchRequest.predicate = predicate
-        print(fetchRequest)
         
         var fetchedPhotos: [Photo]?
         
@@ -122,7 +114,6 @@ class FlickrClient : NSObject {
         
         // Return existing photo if available
         if let existingPhoto = fetchedPhotos?.first {
-            print("existingPhoto: ", existingPhoto)
             return existingPhoto
         }
         
