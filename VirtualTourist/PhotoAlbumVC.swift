@@ -174,12 +174,25 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath:IndexPath) {
         
-        barButton.title = "Remove Selected Pictures"
-        
         let cell = collectionView.cellForItem(at: indexPath) as! PhotoViewCell
-        cell.alpha = 0.3
         
-        selectedIndexPaths.append(indexPath)
+        if cell.alpha == 1 { // When a photo is selected
+            cell.alpha = 0.3
+            selectedIndexPaths.append(indexPath)
+            
+        } else { // Deselect the photo
+            cell.alpha = 1
+            if let index = selectedIndexPaths.index(of:indexPath) {
+                selectedIndexPaths.remove(at: index)
+            }
+        }
+        
+        // Change Bar Button Title
+        if selectedIndexPaths.count > 0 {
+            barButton.title = "Remove Selected Pictures"
+        } else {
+            barButton.title = "New Collection"
+        }
         
     }
     
