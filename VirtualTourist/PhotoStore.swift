@@ -50,8 +50,6 @@ class PhotoStore {
     
     private func processImageRequest(data: Data?, error: Error?) -> ImageResult {
         
-        print("processImageRequest is called")
-        
         guard
             let imageData = data,
             let image = UIImage(data: imageData) else {
@@ -63,15 +61,12 @@ class PhotoStore {
                     return .failure(PhotoError.imageCreationError)
                 }
         }
-        print("image: ", image)
         
         return .success(image)
     }
     
     
     func fetchImage(for photo: Photo, completion: @escaping (ImageResult) -> Void) {
-        
-        print("fetchImage is called")
         
         // If there is an existing image
         let photoKey = photo.photoID
@@ -107,8 +102,6 @@ class PhotoStore {
     
     
     func fetchFlickrPhotos(pin: Pin, fromParameters url: URL, completion: @escaping (PhotosResult) -> Void) {
-        
-        print("fetchFlickrPhotos is called")
         
         // create session and request
         let session = URLSession.shared
@@ -148,7 +141,6 @@ class PhotoStore {
 
             // Get [Photo] Array
             var result = FlickrClient.getFlickrPhotos(pin: pin, fromJSON: data, into: moc)
-            print("result: ", result)
             
             if case .success = result {
                 do {
@@ -192,8 +184,7 @@ class PhotoStore {
     // MARK: Fetch All Photos in PhotoAlbumVC
     
     func fetchAllPhotos(with pin: Pin, completion: @escaping (PhotosResult) -> Void) {
-        
-        print("pin.pinID: ", pin.pinID!)
+
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
         
         // Fetch photos associalted with the specific pin
@@ -207,7 +198,6 @@ class PhotoStore {
         moc.perform {
             do {
                 let allPhotos = try moc.fetch(fetchRequest)
-                print("allPhotos: ", allPhotos)
                 
                 completion(.success(allPhotos))
 

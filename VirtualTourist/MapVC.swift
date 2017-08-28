@@ -114,7 +114,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
 
             let pinAnnotation = pin.getPinAnnotationsFromPin(pin: pin)
             self.mapView.addAnnotation(pinAnnotation)
-            print("saved pin: ", pin)
         }
 
     }
@@ -237,7 +236,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 
                 if let selectedPin = fetchedPins?.first {
                     self.pin = selectedPin
-                    print("selectedPin: ", self.pin!)
                 }
                 
                 performSegue(withIdentifier: "photoAlbumVC", sender: self)
@@ -250,7 +248,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
         
         if newState == MKAnnotationViewDragState.ending {
             let droppedAt = view.annotation?.coordinate
-            print(droppedAt)
         }
     }
     
@@ -266,7 +263,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 controller.imageStore = self.imageStore
                 controller.moc = self.store.persistentContainer.viewContext
                 controller.pin = self.pin!
-                print("self.pin in MapVC: ", self.pin)
             }
             
         }

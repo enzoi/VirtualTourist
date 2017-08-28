@@ -286,13 +286,9 @@ extension PhotoAlbumVC {
             photo.remoteURL = remoteURL
             // photo.pin = pin
             
-            print("created photo: ", photo)
-            
             // Get current pin and add the photo to the pin
             let fetchedPin = try? fetchRequest.execute()
             fetchedPin?[0].addToPhotos(photo)
-            
-            print("saved photo: ", photo)
             
             do {
                 try moc.save()
