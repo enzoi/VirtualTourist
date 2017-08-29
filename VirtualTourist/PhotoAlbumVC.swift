@@ -143,10 +143,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     // MARK:- UICollectionViewDataSource methods
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
