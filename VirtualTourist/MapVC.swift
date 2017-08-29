@@ -119,7 +119,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
         
         self.mapView.delegate = self
         
-        if gestureRecognizer.state == .ended {
+        if gestureRecognizer.state == .began {
             
             let touchPoint = gestureRecognizer.location(in: mapView)
             let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
