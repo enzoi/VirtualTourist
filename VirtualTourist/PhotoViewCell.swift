@@ -5,6 +5,8 @@
 //  Created by Yeontae Kim on 8/23/17.
 //  Copyright © 2017 YTK. All rights reserved.
 //
+//  PhotoViewCell code below created based on the solution from Big Nerd Ranch's iOS Programming(6th ed). 
+//
 
 import UIKit
 

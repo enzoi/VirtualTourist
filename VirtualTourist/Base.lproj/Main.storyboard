@@ -150,24 +150,6 @@
             </objects>
             <point key="canvasLocation" x="1776.8" y="138.98050974512745"/>
         </scene>
-        <!--LoginVC-->
-        <scene sceneID="RhX-UB-FEh">
-            <objects>
-                <viewController id="FKn-Sg-uLd" customClass="LoginVC" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="WRe-VN-4rJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="kfy-H9-VOx"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="xrF-WP-Sjw">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="d7E-Xr-8NU" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-386" y="139"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="KMu-E4-NHB">
             <objects>

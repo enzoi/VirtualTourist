@@ -139,6 +139,8 @@ class MapVC: UIViewController, MKMapViewDelegate {
   
     
     // MARK: Map View
+    // The pin annoation view with a delete icon below refers to the solution from
+    // https://stackoverflow.com/questions/26991473/mkpointannotations-touch-event-in-swift
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
@@ -244,7 +246,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        //Notice that this code works for both Scissors and Paper
         if segue.identifier == "photoAlbumVC" {
             if let controller = segue.destination as? PhotoAlbumVC {
                 controller.store = self.store
