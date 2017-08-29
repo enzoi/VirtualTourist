@@ -18,6 +18,7 @@ extension Photo {
 
     @NSManaged public var remoteURL: NSObject?
     @NSManaged public var photoID: String?
+    @NSManaged public var imageData: NSData?
     @NSManaged public var pin: Pin?
 
 }

@@ -31,8 +31,6 @@ enum PinsResult {
 
 class PhotoStore {
     
-    let imageStore = ImageStore()
-    
     let persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Model")
         container.loadPersistentStores { (description, error) in
@@ -68,36 +66,57 @@ class PhotoStore {
     
     func fetchImage(for photo: Photo, completion: @escaping (ImageResult) -> Void) {
         
-        // If there is an existing image
-        let photoKey = photo.photoID
-        if let image = imageStore.image(forKey: photoKey!) {
-            
-            OperationQueue.main.addOperation {
-                completion(.success(image))
-            }
-            
-            return
-        }
+        if let imageData = photo.imageData {
         
-        // Otherwise, get an image using URL
-        let photoURL = photo.remoteURL
-        let request = URLRequest(url: photoURL as! URL)
+            print("imageData: ", imageData)
+            let moc = self.persistentContainer.viewContext
         
-        let task = session.dataTask(with: request) {
-            (data, response, error) -> Void in
+            moc.perform {
             
-            let result = self.processImageRequest(data: data, error: error)
-            
-            // Store the image in cache
-            if case let .success(image) = result {
-                self.imageStore.setImage(image, forKey: photoKey!)
+                let image = UIImage(data: imageData as Data)
+                
+                OperationQueue.main.addOperation {
+                    completion(.success(image!))
+                }
             }
             
-            OperationQueue.main.addOperation {
-                completion(result)
+        } else {
+        
+            // Otherwise, get an image using URL
+            let photoURL = photo.remoteURL
+            let request = URLRequest(url: photoURL as! URL)
+        
+            let task = session.dataTask(with: request) { (data, response, error) -> Void in
+            
+                let result = self.processImageRequest(data: data, error: error)
+            
+                // After get the imageData, store the image in core data
+                if case let .success(image) = result {
+                
+                    // Turn image into JPEG data
+                    if let data = UIImageJPEGRepresentation(image, 0.5) {
+                    
+                        // Write it to Core Data
+                        let moc = self.persistentContainer.viewContext
+                    
+                        moc.perform {
+                            photo.imageData = data as NSData
+                            
+                            do {
+                                try moc.save()
+                            } catch {
+                                moc.rollback()
+                            }
+                        }
+                    }
+                }
+    
+                OperationQueue.main.addOperation {
+                    completion(result)
+                }
             }
+            task.resume()
         }
-        task.resume()
     }
     
     

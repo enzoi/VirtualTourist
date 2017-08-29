@@ -123,6 +123,7 @@ class FlickrClient : NSObject {
             photo = Photo(context: context)
             photo.remoteURL = NSURL(string: url)
             photo.photoID = photoID
+            // photo.imageData = UIImage --> UIImageJPEGRepresentation(UIImage, 1.0)
         }
 
         return photo

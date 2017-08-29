@@ -19,7 +19,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     @IBOutlet weak var barButton: UIBarButtonItem!
 
     var store: PhotoStore!
-    var imageStore: ImageStore!
     var moc: NSManagedObjectContext!
     var pin: Pin!
 
@@ -265,35 +264,4 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
 }
 
-// MARK: Core Data
-
-extension PhotoAlbumVC {
-    
-    func savePhoto(remoteURL: NSURL) {
-        
-        let moc = store.persistentContainer.viewContext
-        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-        let predicate = NSPredicate(format: "\(#keyPath(Pin.pinID)) == %@", pin.pinID!)
-        fetchRequest.predicate = predicate
-        
-        moc.perform {
-            
-            // Create a Photo instance
-            let photo = Photo(context: moc)
-            photo.remoteURL = remoteURL
-            // photo.pin = pin
-            
-            // Get current pin and add the photo to the pin
-            let fetchedPin = try? fetchRequest.execute()
-            fetchedPin?[0].addToPhotos(photo)
-            
-            do {
-                try moc.save()
-            } catch {
-                moc.rollback()
-            }
-        }
-    }
-
-}
 

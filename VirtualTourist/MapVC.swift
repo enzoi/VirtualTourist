@@ -16,7 +16,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     
     var store: PhotoStore!
-    var imageStore: ImageStore!
     var pin: Pin?
     let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     var annotations = [PinAnnotation]()
@@ -240,13 +239,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
 
     }
     
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
-        
-        if newState == MKAnnotationViewDragState.ending {
-            let droppedAt = view.annotation?.coordinate
-        }
-    }
-    
     
     // MARK: Segue
     
@@ -256,7 +248,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
         if segue.identifier == "photoAlbumVC" {
             if let controller = segue.destination as? PhotoAlbumVC {
                 controller.store = self.store
-                controller.imageStore = self.imageStore
                 controller.moc = self.store.persistentContainer.viewContext
                 controller.pin = self.pin!
             }

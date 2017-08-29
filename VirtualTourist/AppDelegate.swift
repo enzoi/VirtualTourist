@@ -25,7 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             rootViewController.topViewController as! MapVC
 
         mapViewController.store = self.store
-        mapViewController.imageStore = ImageStore()
         
         return true
     }
