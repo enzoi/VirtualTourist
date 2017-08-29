@@ -5,6 +5,8 @@
 //  Created by Yeontae Kim on 7/28/17.
 //  Copyright © 2017 YTK. All rights reserved.
 //
+//  PhotoStore code below created based on the solution from Big Nerd Ranch's iOS Programming(6th ed).
+//
 
 import Foundation
 import UIKit
@@ -67,17 +69,11 @@ class PhotoStore {
     func fetchImage(for photo: Photo, completion: @escaping (ImageResult) -> Void) {
         
         if let imageData = photo.imageData {
-        
-            print("imageData: ", imageData)
-            let moc = self.persistentContainer.viewContext
-        
-            moc.perform {
             
-                let image = UIImage(data: imageData as Data)
+            let image = UIImage(data: imageData as Data)
                 
-                OperationQueue.main.addOperation {
-                    completion(.success(image!))
-                }
+            OperationQueue.main.addOperation {
+                completion(.success(image!))
             }
             
         } else {
@@ -110,7 +106,7 @@ class PhotoStore {
                         }
                     }
                 }
-    
+                
                 OperationQueue.main.addOperation {
                     completion(result)
                 }

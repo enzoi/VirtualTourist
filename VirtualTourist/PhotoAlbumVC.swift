@@ -180,6 +180,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             
         } else { // Deselect the photo
             cell.alpha = 1
+            print(indexPath)
             if let index = selectedIndexPaths.index(of:indexPath) {
                 selectedIndexPaths.remove(at: index)
             }

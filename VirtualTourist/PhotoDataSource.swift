@@ -12,7 +12,6 @@ import CoreData
 
 class PhotoDataSource: NSObject, UICollectionViewDataSource {
     
-    var managedObjectContext: NSManagedObjectContext?
     var photos: [Photo] = []
     var store = PhotoStore()
     
