@@ -48,6 +48,18 @@ class PhotoStore {
         return URLSession(configuration: config)
     }()
     
+    // Flickr Parameter
+    var methodParameters: [String: Any] =  [
+        Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
+        Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
+        Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
+        Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
+        Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback,
+        Constants.FlickrParameterKeys.Radius: Constants.FlickrParameterValues.Radius,
+        Constants.FlickrParameterKeys.PerPage: Constants.FlickrParameterValues.PerPage,
+        Constants.FlickrParameterKeys.Page: 1
+    ]
+    
     private func processImageRequest(data: Data?, error: Error?) -> ImageResult {
         
         guard
@@ -216,6 +228,28 @@ class PhotoStore {
                 completion(.failure(error))
             }
         }
+    }
+    
+    
+    // MARK: Flickr URL Parameters
+    
+    func flickrURLFromParameters(_ parameters: [String:Any]) -> URL {
+        
+        var components = URLComponents()
+        components.scheme = Constants.Flickr.APIScheme
+        components.host = Constants.Flickr.APIHost
+        components.path = Constants.Flickr.APIPath
+        components.queryItems = [URLQueryItem]()
+        
+        let queryMethod = URLQueryItem(name: Constants.FlickrParameterKeys.Method, value: Constants.FlickrParameterValues.SearchMethod)
+        components.queryItems!.append(queryMethod)
+        
+        for (key, value) in parameters {
+            let queryItem = URLQueryItem(name: key, value: "\(value)")
+            components.queryItems!.append(queryItem)
+        }
+        
+        return components.url!
     }
 
     

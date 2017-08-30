@@ -19,8 +19,8 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     @IBOutlet weak var barButton: UIBarButtonItem!
 
     var store: PhotoStore!
-    var moc: NSManagedObjectContext!
     var pin: Pin!
+    var pageNumber: Int = 1
 
     var selectedIndexPaths = [IndexPath]()
     let photoDataSource = PhotoDataSource()
@@ -28,17 +28,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     var fetchedResultsController: NSFetchedResultsController<Photo>?
     var annotation = MKPointAnnotation()
 
-    
-    // Flickr Parameter
-    var methodParameters: [String: Any] =  [
-        Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
-        Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
-        Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
-        Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
-        Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback,
-        Constants.FlickrParameterKeys.Radius: Constants.FlickrParameterValues.Radius,
-        Constants.FlickrParameterKeys.PerPage: Constants.FlickrParameterValues.PerPage
-    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +61,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             let url = getURL(lat: lat, lon: lon)
             
             // Get photos from the first page
-            methodParameters[Constants.FlickrParameterKeys.Page] = 1
+            store.methodParameters[Constants.FlickrParameterKeys.Page] = 1
             
             store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
  
@@ -85,10 +74,10 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     private func getURL(lat: Double, lon: Double) -> URL {
         // Get the coordinate to create URL
-        methodParameters[Constants.FlickrParameterKeys.Latitude] = self.pin?.latitude
-        methodParameters[Constants.FlickrParameterKeys.Longitude] = self.pin?.longitude
+        store.methodParameters[Constants.FlickrParameterKeys.Latitude] = self.pin?.latitude
+        store.methodParameters[Constants.FlickrParameterKeys.Longitude] = self.pin?.longitude
         
-        let url = flickrURLFromParameters(methodParameters)
+        let url = store.flickrURLFromParameters(store.methodParameters)
         
         return url
     }
@@ -191,24 +180,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
     }
     
-    func flickrURLFromParameters(_ parameters: [String:Any]) -> URL {
-        
-        var components = URLComponents()
-        components.scheme = Constants.Flickr.APIScheme
-        components.host = Constants.Flickr.APIHost
-        components.path = Constants.Flickr.APIPath
-        components.queryItems = [URLQueryItem]()
-        
-        let queryMethod = URLQueryItem(name: Constants.FlickrParameterKeys.Method, value: Constants.FlickrParameterValues.SearchMethod)
-        components.queryItems!.append(queryMethod)
-        
-        for (key, value) in parameters {
-            let queryItem = URLQueryItem(name: key, value: "\(value)")
-            components.queryItems!.append(queryItem)
-        }
-        
-        return components.url!
-    }
+
 
     // MARK: Bar Button
     
@@ -224,10 +196,9 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             self.photoDataSource.photos.removeAll()
             
             // Get New Collection (Try next page)
-            methodParameters[Constants.FlickrParameterKeys.Page] = (methodParameters[Constants.FlickrParameterKeys.Page] as! Int) + 1
+            store.methodParameters[Constants.FlickrParameterKeys.Page] = (store.methodParameters[Constants.FlickrParameterKeys.Page] as! Int) + 1
   
-            
-            let url = flickrURLFromParameters(methodParameters)
+            let url = store.flickrURLFromParameters(store.methodParameters)
 
             store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
                 

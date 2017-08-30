@@ -249,7 +249,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
         if segue.identifier == "photoAlbumVC" {
             if let controller = segue.destination as? PhotoAlbumVC {
                 controller.store = self.store
-                controller.moc = self.store.persistentContainer.viewContext
+                // controller.moc = self.store.persistentContainer.viewContext
                 controller.pin = self.pin!
             }
             
