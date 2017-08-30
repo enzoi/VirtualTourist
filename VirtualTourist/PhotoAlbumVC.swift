@@ -190,7 +190,18 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             
             // Remove photos from data source, core data
             for photo in self.photoDataSource.photos {
-                pin.removeFromPhotos(photo)
+                
+                let moc = self.store.persistentContainer.viewContext
+                
+                moc.perform {
+                    self.pin.removeFromPhotos(photo)
+                    
+                    do {
+                        try moc.save()
+                    } catch {
+                        moc.rollback()
+                    }
+                }
             }
             
             self.photoDataSource.photos.removeAll()
@@ -217,9 +228,17 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
                     photoDataSource.photos.remove(at: index)
                 }
                 
-                // Remove the photo from core data
-                pin.removeFromPhotos(photo)
+                let moc = self.store.persistentContainer.viewContext
                 
+                moc.perform {
+                    self.pin.removeFromPhotos(photo)
+                    
+                    do {
+                        try moc.save()
+                    } catch {
+                        moc.rollback()
+                    }
+                }
             }
 
             // Update collection view after removing the photo
