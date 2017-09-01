@@ -20,12 +20,10 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
 
     var store: PhotoStore!
     var pin: Pin!
-    var pageNumber: Int = 1
 
     var selectedIndexPaths = [IndexPath]()
     let photoDataSource = PhotoDataSource()
 
-    var fetchedResultsController: NSFetchedResultsController<Photo>?
     var annotation = MKPointAnnotation()
 
     
@@ -53,18 +51,19 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         updatePhotos()
 
         // Fetch new photos if there is no existing photos
+        print(photoDataSource.photos.count)
+        
         if photoDataSource.photos.count == 0 {
             guard let lat = self.pin?.latitude,
                 let lon = self.pin?.longitude
                 else { return }
             
             let url = getURL(lat: lat, lon: lon)
+            print("url: ", url)
             
-            // Get photos from the first page
-            store.methodParameters[Constants.FlickrParameterKeys.Page] = 1
-            
+            // context?
             store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
- 
+                
                 self.updatePhotos()
             }
         }
@@ -86,11 +85,14 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     private func updatePhotos() {
         
+        print("updatePhotos called")
+        
         store.fetchAllPhotos(with: self.pin) { (photosResult) in
             
             switch photosResult {
             case let .success(photos):
                 
+                print("photos: ", photos)
                 // Feed pin associated photos to collection view data source
                 self.photoDataSource.photos = photos
                 
@@ -187,35 +189,39 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     @IBAction func barButtonPressed(_ sender: Any) {
         
         if barButton.title == "New Collection" {
+
             
             // Remove photos from data source, core data
-            for photo in self.photoDataSource.photos {
+            let moc = self.store.persistentContainer.viewContext
+            
+            moc.perform {
                 
-                let moc = self.store.persistentContainer.viewContext
+                if let pin = self.pin {
+                    pin.removeFromPhotos(pin.photos!)
+                }
                 
-                moc.perform {
-                    self.pin.removeFromPhotos(photo)
-                    
-                    do {
-                        try moc.save()
-                    } catch {
-                        moc.rollback()
-                    }
+                self.photoDataSource.photos.removeAll()
+
+                do {
+                    try moc.save()
+                } catch {
+                    moc.rollback()
                 }
             }
             
-            self.photoDataSource.photos.removeAll()
-            
             // Get New Collection (Try next page)
             store.methodParameters[Constants.FlickrParameterKeys.Page] = (store.methodParameters[Constants.FlickrParameterKeys.Page] as! Int) + 1
-  
+            print(store.methodParameters[Constants.FlickrParameterKeys.Page]!)
+            
             let url = store.flickrURLFromParameters(store.methodParameters)
+            
+            print(url)
 
             store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
                 
                 self.updatePhotos()
+                
             }
-            
             
             
         } else { // barButton.title == "Remove Selected Pictures"

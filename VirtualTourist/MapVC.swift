@@ -197,7 +197,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 
                 let moc = self.store.persistentContainer.viewContext
                 
-                moc.performAndWait {
+                moc.perform {
                     let fetchedPins = try? fetchRequest.execute()
                     
                     if let selectedPin = fetchedPins?.first {

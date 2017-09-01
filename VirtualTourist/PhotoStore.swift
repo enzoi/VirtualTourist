@@ -83,7 +83,8 @@ class PhotoStore {
         if let imageData = photo.imageData {
             
             let image = UIImage(data: imageData as Data)
-                
+            print("image: ", image!)
+            
             OperationQueue.main.addOperation {
                 completion(.success(image!))
             }
@@ -162,25 +163,29 @@ class PhotoStore {
                 displayError("No data was returned by the request!")
                 return
             }
-            
-            // Get managedObjectContext
-            let moc = self.persistentContainer.viewContext
 
-            // Get [Photo] Array
-            var result = FlickrClient.getFlickrPhotos(pin: pin, fromJSON: data, into: moc)
-            
-            if case .success = result {
+            DispatchQueue.main.sync {
+                
+                let moc = self.persistentContainer.viewContext
+                
+                let result = FlickrClient.getFlickrPhotos(pin: pin, fromJSON: data, into: moc)
+                
                 do {
                     try moc.save()
-                } catch let error {
-                    result = .failure(error)
+                } catch {
+                    print("Error saving to Core Data: \(error).")
+                    completion(.failure(error))
+                    return
+                }
+                
+                print("result: ", result)
+                switch result {
+                case let .success(photos):
+                    completion(.success(photos))
+                case .failure(_):
+                    completion(result)
                 }
             }
-            
-            OperationQueue.main.addOperation {
-                completion(result)
-            }
-            
         }
         
         // start the task!
@@ -209,19 +214,19 @@ class PhotoStore {
     // MARK: Fetch All Photos in PhotoAlbumVC
     
     func fetchAllPhotos(with pin: Pin, completion: @escaping (PhotosResult) -> Void) {
-
-        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
-        
-        // Fetch photos associalted with the specific pin
-        let predicate = NSPredicate(format: "\(#keyPath(Photo.pin.pinID)) == %@", pin.pinID!)
-        fetchRequest.predicate = predicate
         
         let moc = persistentContainer.viewContext
         
         moc.perform {
+            
+            let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
+            
+            // Fetch photos associalted with the specific pin
+            let predicate = NSPredicate(format: "\(#keyPath(Photo.pin.pinID)) == %@", pin.pinID!)
+            fetchRequest.predicate = predicate
+            
             do {
                 let allPhotos = try moc.fetch(fetchRequest)
-                
                 completion(.success(allPhotos))
 
             } catch {
