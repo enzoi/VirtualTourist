@@ -51,23 +51,20 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         updatePhotos()
 
         // Fetch new photos if there is no existing photos
-        print(photoDataSource.photos.count)
-        
         if photoDataSource.photos.count == 0 {
             guard let lat = self.pin?.latitude,
                 let lon = self.pin?.longitude
                 else { return }
             
             let url = getURL(lat: lat, lon: lon)
-            print("url: ", url)
             
-            // context?
             store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
                 
                 self.updatePhotos()
             }
         }
     }
+
     
     // Helper: Get an URL using given coordinate from MapVC
     
@@ -81,24 +78,23 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         return url
     }
     
-    // MARK: Fetch photos
+    // MARK: Fetch all photos from core data
     
     private func updatePhotos() {
-        
-        print("updatePhotos called")
         
         store.fetchAllPhotos(with: self.pin) { (photosResult) in
             
             switch photosResult {
             case let .success(photos):
                 
-                print("photos: ", photos)
                 // Feed pin associated photos to collection view data source
+                let photos = photos.sorted(by: { $0.photoID! < $1.photoID!})
                 self.photoDataSource.photos = photos
                 
             case .failure(_):
                 self.photoDataSource.photos.removeAll()
             }
+            
             self.collectionView.reloadSections(IndexSet(integer: 0))
         }
     }
@@ -109,7 +105,8 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        collectionView?.reloadData()
+        super.viewWillAppear(animated)
+        
     }
 
     func flowLayoutSetup() {
@@ -147,6 +144,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 case let .success(image) = result else {
                     return
             }
+            
             let photoIndexPath = IndexPath(item: photoIndex, section: 0)
             
             // When the request finishes, only update the cell if it's still visible
@@ -167,7 +165,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             
         } else { // Deselect the photo
             cell.alpha = 1
-            print(indexPath)
             if let index = selectedIndexPaths.index(of:indexPath) {
                 selectedIndexPaths.remove(at: index)
             }
@@ -183,14 +180,12 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
     }
     
 
-
     // MARK: Bar Button
     
     @IBAction func barButtonPressed(_ sender: Any) {
         
         if barButton.title == "New Collection" {
 
-            
             // Remove photos from data source, core data
             let moc = self.store.persistentContainer.viewContext
             
@@ -199,8 +194,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 if let pin = self.pin {
                     pin.removeFromPhotos(pin.photos!)
                 }
-                
-                self.photoDataSource.photos.removeAll()
 
                 do {
                     try moc.save()
@@ -211,32 +204,25 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             
             // Get New Collection (Try next page)
             store.methodParameters[Constants.FlickrParameterKeys.Page] = (store.methodParameters[Constants.FlickrParameterKeys.Page] as! Int) + 1
-            print(store.methodParameters[Constants.FlickrParameterKeys.Page]!)
             
             let url = store.flickrURLFromParameters(store.methodParameters)
-            
-            print(url)
 
             store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
-                
                 self.updatePhotos()
-                
             }
             
             
         } else { // barButton.title == "Remove Selected Pictures"
             
-            // Remove the photo from photo data source
+            // Remove the photo from photo data source and core data
             for indexPath in selectedIndexPaths {
                 
                 let photo = photoDataSource.photos[indexPath.row]
-                if let index = photoDataSource.photos.index(of:photo) {
-                    photoDataSource.photos.remove(at: index)
-                }
                 
                 let moc = self.store.persistentContainer.viewContext
                 
-                moc.perform {
+                moc.performAndWait {
+                    
                     self.pin.removeFromPhotos(photo)
                     
                     do {
@@ -248,7 +234,8 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             }
 
             // Update collection view after removing the photo
-            self.collectionView.reloadSections(IndexSet(integer: 0))
+            updatePhotos()
+            
             barButton.title = "New Collection"
             selectedIndexPaths = []
         }

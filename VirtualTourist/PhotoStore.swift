@@ -83,7 +83,6 @@ class PhotoStore {
         if let imageData = photo.imageData {
             
             let image = UIImage(data: imageData as Data)
-            print("image: ", image!)
             
             OperationQueue.main.addOperation {
                 completion(.success(image!))
@@ -178,7 +177,6 @@ class PhotoStore {
                     return
                 }
                 
-                print("result: ", result)
                 switch result {
                 case let .success(photos):
                     completion(.success(photos))
@@ -215,20 +213,22 @@ class PhotoStore {
     
     func fetchAllPhotos(with pin: Pin, completion: @escaping (PhotosResult) -> Void) {
         
+        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+        
+        // Fetch photos associalted with the specific pin
+        let predicate = NSPredicate(format: "\(#keyPath(Pin.pinID)) == %@", pin.pinID!)
+        fetchRequest.predicate = predicate
+        
         let moc = persistentContainer.viewContext
         
         moc.perform {
             
-            let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
-            
-            // Fetch photos associalted with the specific pin
-            let predicate = NSPredicate(format: "\(#keyPath(Photo.pin.pinID)) == %@", pin.pinID!)
-            fetchRequest.predicate = predicate
-            
             do {
-                let allPhotos = try moc.fetch(fetchRequest)
-                completion(.success(allPhotos))
-
+                let pin = try moc.fetch(fetchRequest)
+                if let currentPin = pin.first {
+                    let allPhotos = Array(currentPin.photos!) as! [Photo]
+                    completion(.success(allPhotos))
+                }
             } catch {
                 completion(.failure(error))
             }
