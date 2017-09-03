@@ -213,8 +213,6 @@ class PhotoStore {
     
     func fetchAllPhotos(with pin: Pin, completion: @escaping (PhotosResult) -> Void) {
         
-        print("pin.id: ", pin.pinID!)
-        print(pin.photos!)
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
         
         // Fetch photos associalted with the specific pin
