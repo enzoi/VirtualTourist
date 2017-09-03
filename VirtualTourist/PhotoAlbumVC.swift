@@ -46,12 +46,10 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         detailMapView.addAnnotation(annotation)
         
         flowLayoutSetup()
-        
-        // Fetch existing photos
-        updatePhotos()
 
         // Fetch new photos if there is no existing photos
         if photoDataSource.photos.count == 0 {
+
             guard let lat = self.pin?.latitude,
                 let lon = self.pin?.longitude
                 else { return }
@@ -104,10 +102,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         flowLayoutSetup()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-    }
 
     func flowLayoutSetup() {
         
@@ -224,7 +218,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 moc.performAndWait {
                     
                     self.pin.removeFromPhotos(photo)
-                    
+
                     do {
                         try moc.save()
                     } catch {

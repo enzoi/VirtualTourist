@@ -213,6 +213,8 @@ class PhotoStore {
     
     func fetchAllPhotos(with pin: Pin, completion: @escaping (PhotosResult) -> Void) {
         
+        print("pin.id: ", pin.pinID!)
+        print(pin.photos!)
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
         
         // Fetch photos associalted with the specific pin
@@ -225,6 +227,7 @@ class PhotoStore {
             
             do {
                 let pin = try moc.fetch(fetchRequest)
+                
                 if let currentPin = pin.first {
                     let allPhotos = Array(currentPin.photos!) as! [Photo]
                     completion(.success(allPhotos))
