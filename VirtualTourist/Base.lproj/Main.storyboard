@@ -33,13 +33,7 @@
                             <constraint firstItem="aG8-6Q-lTg" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="hhJ-0U-RQV"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Virtual Tourist" id="Ify-V5-iwE">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="opR-Ac-AaY">
-                            <connections>
-                                <action selector="editButtonPressed:" destination="BYZ-38-t0r" id="JqE-30-RJv"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Virtual Tourist" id="Ify-V5-iwE"/>
                     <connections>
                         <outlet property="mapView" destination="aG8-6Q-lTg" id="dg8-n4-7t1"/>
                         <segue destination="SpI-Tk-hBT" kind="show" identifier="photoAlbumVC" id="1fJ-oK-fL5"/>
