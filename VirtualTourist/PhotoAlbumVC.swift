@@ -176,27 +176,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
     }
     
-    func deletePhotos(photo: Photo, into context: NSManagedObjectContext) {
-        
-        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
-        
-        // Fetch photos associalted with the specific pin
-        let predicate = NSPredicate(format: "\(#keyPath(Photo.pin.pinID)) == %@", (photo.pin?.pinID!)!)
-        fetchRequest.predicate = predicate
-        
-        context.performAndWait {
-            
-            if let photos = try? context.fetch(fetchRequest)  {
-                // Remove photos from data source, core data
-                for photoItem in photos {
-                    if photoItem.photoID == photo.photoID {
-                        context.delete(photoItem)
-                    }
-                }
-            }
-        }
-    }
-    
 
     // MARK: Bar Button
     
@@ -254,17 +233,9 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 let moc = self.store.persistentContainer.viewContext
                 
                 // Remove the photos from the context
-                self.deletePhotos(photo: photo, into: moc)
-                
-                // Fetch current pin and delete relationship to photos
-                moc.perform {
+                moc.performAndWait {
                     
-                    if let result = try? moc.fetch(fetchRequest) {
-                        if let currentPin = result.first {
-                            // Remove the photo from the current pin
-                            currentPin.removeFromPhotos(photo)
-                        }
-                    }
+                    moc.delete(photo)
                     
                     do {
                         try moc.save()
@@ -273,7 +244,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
                     }
                 }
             }
-            
 
             // Update collection view after removing the photo
             updatePhotos()

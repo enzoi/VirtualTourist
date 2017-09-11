@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VirtualTourist/PhotoAlbumVC.swift"
-            timestampString = "526850341.679364"
+            timestampString = "526866831.791552"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "353"
-            endingLineNumber = "353">
+            startingLineNumber = "297"
+            endingLineNumber = "297">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -182,11 +182,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VirtualTourist/PhotoAlbumVC.swift"
-            timestampString = "526850341.679364"
+            timestampString = "526866831.791552"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "232"
-            endingLineNumber = "232"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
             landmarkName = "barButtonPressed(_:)"
             landmarkType = "7">
          </BreakpointContent>
