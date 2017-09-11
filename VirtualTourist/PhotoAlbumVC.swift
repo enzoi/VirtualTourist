@@ -47,20 +47,28 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
         flowLayoutSetup()
 
-        // Fetch new photos if there is no existing photos
-        if photoDataSource.photos.count == 0 {
-
-            guard let lat = self.pin?.latitude,
-                let lon = self.pin?.longitude
-                else { return }
+        // Fetch current pin associated photos first
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
+        updatePhotos()
+        dispatchGroup.leave()
+        
+        dispatchGroup.notify(queue: DispatchQueue.main) {
             
-            let url = getURL(lat: lat, lon: lon)
-            
-            store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
+            // If there is no photos, then get photos from Flickr
+            if self.photoDataSource.photos.count == 0 {
+                guard let lat = self.pin?.latitude,
+                    let lon = self.pin?.longitude
+                    else { return }
                 
-                self.updatePhotos()
+                let url = self.getURL(lat: lat, lon: lon)
+                
+                self.store.fetchFlickrPhotos(pin: self.pin, fromParameters: url) { (photosResult) in
+                    self.updatePhotos()
+                }
             }
         }
+        
     }
 
     
@@ -84,15 +92,10 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             
             switch photosResult {
             case let .success(photos):
-                
-                // Feed pin associated photos to collection view data source
-                let photos = photos.sorted(by: { $0.photoID! < $1.photoID!})
                 self.photoDataSource.photos = photos
-                
             case .failure(_):
                 self.photoDataSource.photos.removeAll()
             }
-            
             self.collectionView.reloadSections(IndexSet(integer: 0))
         }
     }
@@ -173,6 +176,27 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
     }
     
+    func deletePhotos(photo: Photo, into context: NSManagedObjectContext) {
+        
+        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
+        
+        // Fetch photos associalted with the specific pin
+        let predicate = NSPredicate(format: "\(#keyPath(Photo.pin.pinID)) == %@", (photo.pin?.pinID!)!)
+        fetchRequest.predicate = predicate
+        
+        context.performAndWait {
+            
+            if let photos = try? context.fetch(fetchRequest)  {
+                // Remove photos from data source, core data
+                for photoItem in photos {
+                    if photoItem.photoID == photo.photoID {
+                        context.delete(photoItem)
+                    }
+                }
+            }
+        }
+    }
+    
 
     // MARK: Bar Button
     
@@ -180,13 +204,21 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
         if barButton.title == "New Collection" {
 
-            // Remove photos from data source, core data
+            let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
+            
+            // Fetch photos associalted with the specific pin
+            let predicate = NSPredicate(format: "\(#keyPath(Photo.pin.pinID)) == %@", (self.pin.pinID!))
+            fetchRequest.predicate = predicate
+            
             let moc = self.store.persistentContainer.viewContext
             
             moc.perform {
                 
-                if let pin = self.pin {
-                    pin.removeFromPhotos(pin.photos!)
+                if let result = try? moc.fetch(fetchRequest) {
+                    for photo in result { // photo array
+                        // Remove photos from data source, core data
+                        moc.delete(photo)
+                    }
                 }
 
                 do {
@@ -201,7 +233,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
             
             let url = store.flickrURLFromParameters(store.methodParameters)
 
-            store!.fetchFlickrPhotos(pin: self.pin!, fromParameters: url) { (photosResult) in
+            store.fetchFlickrPhotos(pin: self.pin, fromParameters: url) { (photosResult) in
                 self.updatePhotos()
             }
             
@@ -209,16 +241,31 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
         } else { // barButton.title == "Remove Selected Pictures"
             
             // Remove the photo from photo data source and core data
-            for indexPath in selectedIndexPaths {
+            for indexPath in self.selectedIndexPaths {
                 
-                let photo = photoDataSource.photos[indexPath.row]
+                let photo = self.photoDataSource.photos[indexPath.row]
+                
+                let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+                
+                // Fetch photos associalted with the specific pin
+                let predicate = NSPredicate(format: "\(#keyPath(Pin.pinID)) == %@", (photo.pin?.pinID!)!)
+                fetchRequest.predicate = predicate
                 
                 let moc = self.store.persistentContainer.viewContext
                 
-                moc.performAndWait {
+                // Remove the photos from the context
+                self.deletePhotos(photo: photo, into: moc)
+                
+                // Fetch current pin and delete relationship to photos
+                moc.perform {
                     
-                    self.pin.removeFromPhotos(photo)
-
+                    if let result = try? moc.fetch(fetchRequest) {
+                        if let currentPin = result.first {
+                            // Remove the photo from the current pin
+                            currentPin.removeFromPhotos(photo)
+                        }
+                    }
+                    
                     do {
                         try moc.save()
                     } catch {
@@ -226,6 +273,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
                     }
                 }
             }
+            
 
             // Update collection view after removing the photo
             updatePhotos()

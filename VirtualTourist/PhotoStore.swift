@@ -213,10 +213,10 @@ class PhotoStore {
     
     func fetchAllPhotos(with pin: Pin, completion: @escaping (PhotosResult) -> Void) {
         
-        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
         
         // Fetch photos associalted with the specific pin
-        let predicate = NSPredicate(format: "\(#keyPath(Pin.pinID)) == %@", pin.pinID!)
+        let predicate = NSPredicate(format: "\(#keyPath(Photo.pin.pinID)) == %@", pin.pinID!)
         fetchRequest.predicate = predicate
         
         let moc = persistentContainer.viewContext
@@ -224,15 +224,12 @@ class PhotoStore {
         moc.perform {
             
             do {
-                let pin = try moc.fetch(fetchRequest)
-                
-                if let currentPin = pin.first {
-                    let allPhotos = Array(currentPin.photos!) as! [Photo]
-                    completion(.success(allPhotos))
-                }
+                let allPhotos = try moc.fetch(fetchRequest)
+                completion(.success(allPhotos))
             } catch {
                 completion(.failure(error))
             }
+            
         }
     }
     

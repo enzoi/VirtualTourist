@@ -64,6 +64,7 @@ class FlickrClient : NSObject {
                     context.perform {
                         
                         // Get current pin and add the photo to the pin
+                        // TODO: Is this right implementation to add relationship?
                         pin.addToPhotos(photo)
                         
                         do {
@@ -124,5 +125,26 @@ class FlickrClient : NSObject {
     
 }
 
-
+/*
+if case let .success(photos) = result {
+    let privateQueueContext = self.coreDataStack.privateQueueContext
+    privateQueueContext.performAndWait({
+        try! privateQueueContext.obtainPermanentIDs(for: photos)
+    })
+    let objectIDs = photos.map{ $0.objectID }
+    let predicate = NSPredicate(format: "self IN %@", objectIDs)
+    let sortByDateTaken = NSSortDescriptor(key: "dateTaken", ascending: true)
+    
+    do {
+        try self.coreDataStack.saveChanges()
+        
+        let mainQueuePhotos = try self.fetchMainQueuePhotos(predicate: predicate,
+                                                            sortDescriptors: [sortByDateTaken])
+        result = .success(mainQueuePhotos)
+    }
+    catch let error {
+        result = .failure(error)
+    }
+}
+*/
 
