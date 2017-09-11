@@ -197,15 +197,14 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 
                 let moc = self.store.persistentContainer.viewContext
                 
-                moc.perform {
-                    let fetchedPins = try? fetchRequest.execute()
+                moc.performAndWait {
                     
-                    if let selectedPin = fetchedPins?.first {
-                        self.pin = nil
-                        moc.delete(selectedPin)
-                        mapView.removeAnnotation(annotation)
+                    if let fetchedPins = try? fetchRequest.execute() {
+                    
+                        for pin in fetchedPins {
+                            moc.delete(pin)
+                        }
                     }
-                
                 }
                     
                 do {
@@ -213,6 +212,8 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 } catch {
                     print("Error to save")
                 }
+                
+                mapView.removeAnnotation(annotation)
             }
             
         } else { // Right Button Tapped to Go to PhotoAlbumVC

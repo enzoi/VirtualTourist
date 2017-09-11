@@ -41,7 +41,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
 
         detailMapView.setRegion(region, animated: true)
         
-        let pinLocation = CLLocationCoordinate2D(latitude: self.pin!.latitude, longitude: self.pin!.longitude)
+        let pinLocation = CLLocationCoordinate2D(latitude: self.pin.latitude, longitude: self.pin.longitude)
         self.annotation.coordinate = pinLocation
         detailMapView.addAnnotation(annotation)
         
