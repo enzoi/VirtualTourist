@@ -224,12 +224,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 
                 let photo = self.photoDataSource.photos[indexPath.row]
                 
-                let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-                
-                // Fetch photos associalted with the specific pin
-                let predicate = NSPredicate(format: "\(#keyPath(Pin.pinID)) == %@", (photo.pin?.pinID!)!)
-                fetchRequest.predicate = predicate
-                
                 let moc = self.store.persistentContainer.viewContext
                 
                 // Remove the photos from the context
