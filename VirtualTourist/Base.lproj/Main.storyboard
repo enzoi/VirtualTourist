@@ -37,7 +37,7 @@
                     <navigationItem key="navigationItem" title="Virtual Tourist" id="Ify-V5-iwE">
                         <barButtonItem key="leftBarButtonItem" title="Logout" id="JBf-wC-noX">
                             <connections>
-                                <action selector="logoutButtonPressed:" destination="BYZ-38-t0r" id="Hk0-ct-sw6"/>
+                                <action selector="logoutButtonPressed:" destination="BYZ-38-t0r" id="KVD-Mk-T1h"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -242,12 +242,6 @@
         <!--LoginVC-->
         <scene sceneID="YCO-3S-bAB">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="OCs-Qr-iYh" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="U9N-AY-cTI">
-                    <connections>
-                        <action selector="userDidTapView:" destination="vL6-Eu-OvK" id="UzU-oa-iLP"/>
-                    </connections>
-                </tapGestureRecognizer>
                 <viewController storyboardIdentifier="login" id="vL6-Eu-OvK" customClass="LoginVC" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="1lP-in-lJ1"/>
@@ -279,7 +273,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo-u" translatesAutoresizingMaskIntoConstraints="NO" id="rn2-ss-WkK">
                                 <rect key="frame" x="156" y="163" width="62" height="62"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jTF-rK-JZo">
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jTF-rK-JZo" userLabel="Login Button">
                                 <rect key="frame" x="16" y="327" width="343" height="44"/>
                                 <color key="backgroundColor" red="0.0" green="0.65098039220000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -332,6 +326,12 @@
                         <outlet property="usernameTextField" destination="plg-aK-FQS" id="xnF-ZW-JqU"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OCs-Qr-iYh" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="U9N-AY-cTI">
+                    <connections>
+                        <action selector="userDidTapView:" destination="vL6-Eu-OvK" id="UzU-oa-iLP"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="607.20000000000005" y="-179.46026986506749"/>
         </scene>
@@ -386,7 +386,6 @@
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="loginPressed:" destination="sDe-jB-gPa" eventType="touchUpInside" id="6Fj-CR-GQW"/>
                                     <action selector="signUpPressed:" destination="sDe-jB-gPa" eventType="touchUpInside" id="Fxd-ih-xzY"/>
                                 </connections>
                             </button>
@@ -428,7 +427,6 @@
                     </view>
                     <connections>
                         <outlet property="confirmPasswordTextField" destination="RwV-8j-h4O" id="3nm-sq-n8S"/>
-                        <outlet property="loginButton" destination="vBV-nt-X6D" id="dc7-Xy-Rb7"/>
                         <outlet property="logoImageView" destination="WiN-qz-pss" id="ptD-5A-yFd"/>
                         <outlet property="passwordTextField" destination="t0w-4Q-Uxo" id="E1H-cu-dDB"/>
                         <outlet property="signUpButton" destination="vBV-nt-X6D" id="bIw-cC-OuG"/>

@@ -96,7 +96,7 @@ class SignUpVC: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    // MARK: Login
+    // MARK: Signup
     @IBAction func signUpPressed(_ sender: Any) {
         
         userDidTapView(self)
@@ -119,7 +119,7 @@ class SignUpVC: UIViewController {
                         self.completeSignup()
                     } else {
                         print(error!)
-                        self.getAlertView(title: "Login Error", error: error as! String)
+                        self.getAlertView(title: "Sign up Error", error: error as! String)
                     }
                 }
             }
@@ -141,7 +141,7 @@ class SignUpVC: UIViewController {
     
 }
 
-// MARK: - LoginVC: UITextFieldDelegate
+// MARK: - SignUpVC: UITextFieldDelegate
 
 extension SignUpVC: UITextFieldDelegate {
     
