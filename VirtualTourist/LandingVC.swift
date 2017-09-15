@@ -10,26 +10,25 @@ import UIKit
 
 class LandingVC: UIViewController {
 
+    @IBOutlet weak var signUpButton: UIButton!
+    @IBOutlet weak var logInButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.signUpButton.layer.cornerRadius = 3
+        self.signUpButton.layer.borderWidth = 1
+        self.signUpButton.layer.borderColor = Constants.UI.WhiteColor
+        self.logInButton.layer.cornerRadius = 3
+        self.logInButton.layer.borderWidth = 1
+        self.logInButton.layer.borderColor = Constants.UI.WhiteColor
+        
     }
-    */
 
 }

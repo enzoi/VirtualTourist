@@ -181,63 +181,58 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AwR-R2-y2K">
-                                <rect key="frame" x="16" y="597" width="343" height="30"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Vf-hs-0WR">
-                                        <rect key="frame" x="0.0" y="0.0" width="150" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="150" id="b5a-r6-kqH"/>
-                                        </constraints>
-                                        <state key="normal" title="Sign Up">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="6"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                                <integer key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColor">
-                                                <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <segue destination="sDe-jB-gPa" kind="show" identifier="signup" id="Dbp-yM-oIR"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BiD-76-zQh">
-                                        <rect key="frame" x="150" y="0.0" width="193" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="150" id="nMA-W6-dAF"/>
-                                        </constraints>
-                                        <state key="normal" title="Log In">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <connections>
-                                            <segue destination="vL6-Eu-OvK" kind="show" identifier="login" id="Qps-Zh-6OV"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Vf-hs-0WR">
+                                <rect key="frame" x="16" y="587" width="150" height="40"/>
                                 <constraints>
-                                    <constraint firstItem="3Vf-hs-0WR" firstAttribute="leading" secondItem="AwR-R2-y2K" secondAttribute="leading" id="ZOp-dd-xi4"/>
-                                    <constraint firstAttribute="trailing" secondItem="BiD-76-zQh" secondAttribute="trailing" id="yy2-RC-p2I"/>
+                                    <constraint firstAttribute="width" constant="150" id="b5a-r6-kqH"/>
+                                    <constraint firstAttribute="height" constant="40" id="uIy-4A-p5E"/>
                                 </constraints>
-                            </stackView>
+                                <state key="normal" title="Sign Up">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="sDe-jB-gPa" kind="show" identifier="signup" id="Dbp-yM-oIR"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BiD-76-zQh">
+                                <rect key="frame" x="209" y="587" width="150" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="nMA-W6-dAF"/>
+                                    <constraint firstAttribute="height" constant="40" id="yzs-lH-8jc"/>
+                                </constraints>
+                                <state key="normal" title="Log In">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="vL6-Eu-OvK" kind="show" identifier="login" id="Qps-Zh-6OV"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Virtual Tourist" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pIt-TV-5V7">
+                                <rect key="frame" x="86" y="314.5" width="203.5" height="37"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="31"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.65098039220000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="leadingMargin" secondItem="AwR-R2-y2K" secondAttribute="leading" id="Qvd-XE-ejT"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="AwR-R2-y2K" secondAttribute="trailing" id="cVW-PT-pif"/>
-                            <constraint firstItem="TbG-lq-G0q" firstAttribute="top" secondItem="AwR-R2-y2K" secondAttribute="bottom" constant="40" id="x18-CH-eZH"/>
+                            <constraint firstItem="3Vf-hs-0WR" firstAttribute="baseline" secondItem="BiD-76-zQh" secondAttribute="baseline" id="890-jG-Mtq"/>
+                            <constraint firstItem="pIt-TV-5V7" firstAttribute="centerX" secondItem="8mI-x2-Xjk" secondAttribute="centerX" id="8Hq-Xl-itK"/>
+                            <constraint firstItem="pIt-TV-5V7" firstAttribute="centerY" secondItem="8mI-x2-Xjk" secondAttribute="centerY" id="Wku-IE-CtI"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="BiD-76-zQh" secondAttribute="trailing" id="ftZ-mI-vpQ"/>
+                            <constraint firstItem="3Vf-hs-0WR" firstAttribute="leading" secondItem="8mI-x2-Xjk" secondAttribute="leadingMargin" id="oT7-ww-dIG"/>
+                            <constraint firstItem="TbG-lq-G0q" firstAttribute="top" secondItem="3Vf-hs-0WR" secondAttribute="bottom" constant="40" id="pPi-W5-xbZ"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="rUu-Tg-e02"/>
+                    <connections>
+                        <outlet property="logInButton" destination="BiD-76-zQh" id="K2l-qx-iai"/>
+                        <outlet property="signUpButton" destination="3Vf-hs-0WR" id="p49-sW-6ml"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eDf-Ux-Zch" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-185" y="131"/>
+            <point key="canvasLocation" x="-186.40000000000001" y="130.88455772113943"/>
         </scene>
         <!--LoginVC-->
         <scene sceneID="YCO-3S-bAB">
