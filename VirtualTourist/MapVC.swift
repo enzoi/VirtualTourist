@@ -8,6 +8,7 @@
 
 import UIKit
 import Foundation
+import FirebaseAuth
 import MapKit
 import CoreData
 
@@ -24,6 +25,9 @@ class MapVC: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        store = delegate.store
         
         // Set up gestures and add
         longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotation))
@@ -253,6 +257,18 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 controller.pin = self.pin
             }
             
+        }
+    }
+    
+    // MARK: Logout
+    
+    @IBAction func logoutButtonPressed(_ sender: Any) {
+        
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+        } catch let signOutError as NSError {
+            print ("Error signing out: %@", signOutError)
         }
     }
     

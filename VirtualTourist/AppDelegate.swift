@@ -10,6 +10,7 @@
 
 import UIKit
 import CoreData
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,12 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        // Provide MapVC with persistent container over PhotoStore class
-        let rootViewController = window!.rootViewController as! UINavigationController
-        let mapViewController =
-            rootViewController.topViewController as! MapVC
-
-        mapViewController.store = self.store
+        FirebaseApp.configure()
         
         return true
     }
