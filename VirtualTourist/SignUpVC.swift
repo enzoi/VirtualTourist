@@ -40,33 +40,7 @@ class SignUpVC: UIViewController {
         subscribeToNotification(.UIKeyboardDidHide, selector: #selector(keyboardDidHide))
         
         setupActivityIndicator()
-        
-        /*
-         // Facebook Login Button Setup
-         let FBloginButton = LoginButton(readPermissions: [ .publicProfile ])
-         // FBloginButton.center = view.center
-         FBloginButton.frame = CGRect(x: 16, y: view.frame.height-55, width: view.frame.width-32, height: 30)
-         view.addSubview(FBloginButton)
-         
-         FBloginButton.delegate = self
-         
-         // If Facebook access token exists, navigate to LocationMapVC right away
-         if AccessToken.current != nil {
-         
-         self.activityIndicator.startAnimating()
-         
-         UdacityClient.sharedInstance().postSessionWithFB(self) { (success, error) in
-         performUIUpdatesOnMain {
-         if (success != nil) {
-         self.activityIndicator.stopAnimating()
-         self.completeLogin()
-         } else {
-         self.getAlertView(title: "Login Error", error: error! as! String)
-         }
-         }
-         }
-         }
-         */
+
     }
     
     func setupActivityIndicator() {
@@ -85,6 +59,7 @@ class SignUpVC: UIViewController {
         
         usernameTextField.text = ""
         passwordTextField.text = ""
+        confirmPasswordTextField.text = ""
         
     }
     
@@ -104,7 +79,7 @@ class SignUpVC: UIViewController {
         
         guard let username = usernameTextField.text, let password = passwordTextField.text, let confirmedPassword = confirmPasswordTextField.text else {
             self.activityIndicator.stopAnimating()
-            self.getAlertView(title: "Sign up Failed", error: "User Name or Password is empty!!!")
+            self.showAlertWithMessage(title: "Sign up Failed", message: "User Name or Password is empty!!!")
             return
         }
         
@@ -113,19 +88,17 @@ class SignUpVC: UIViewController {
             
             Auth.auth().createUser(withEmail: username, password: password) { (user, error) in
                 
-                performUIUpdatesOnMain {
-                    if (user != nil) {
-                        self.activityIndicator.stopAnimating()
-                        self.completeSignup()
-                    } else {
-                        print(error!)
-                        self.getAlertView(title: "Sign up Error", error: error as! String)
-                    }
+                if let error = error {
+                    self.showAlertWithError(title: "Sign up Error", error: error)
                 }
+                
+                self.activityIndicator.stopAnimating()
+                self.completeSignup()
             }
+            
         } else {
             self.activityIndicator.stopAnimating()
-            self.getAlertView(title: "Sign up Failed", error: "Passwords not matched!!!")
+            self.showAlertWithMessage(title: "Sign up Failed", message: "Passwords not matched!!!")
         }
     }
 

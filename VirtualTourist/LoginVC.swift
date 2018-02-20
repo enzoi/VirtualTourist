@@ -104,28 +104,21 @@ class LoginVC: UIViewController {
         
         guard let username = usernameTextField.text, let password = passwordTextField.text else {
             self.activityIndicator.stopAnimating()
-            self.getAlertView(title: "Login Failed", error: "User Name or Password is empty!!!")
+            self.showAlertWithMessage(title: "Login Failed", message: "User Name or Password is empty!!!")
             return
         }
         
         Auth.auth().signIn(withEmail: username, password: password) { (user, error) in
-                
-            performUIUpdatesOnMain {
-                if (user != nil) {
-                    self.activityIndicator.stopAnimating()
-                    self.completeLogin()
-                } else {
-                    print(error!)
-                    self.getAlertView(title: "Login Error", error: error as! String)
-                }
+            
+            if let error = error {
+                self.activityIndicator.stopAnimating()
+                self.showAlertWithError(title: "Login Error", error: error)
             }
+
+            self.activityIndicator.stopAnimating()
+            self.completeLogin()
+
         }
-    }
-    
-    @IBAction func signupButtonPressed(_ sender: Any) {
-        
-        
-        
     }
     
     func completeLogin() {
@@ -240,20 +233,3 @@ private extension LoginVC {
         NotificationCenter.default.removeObserver(self)
     }
 }
-
-// MARK - LoginVC (AlertController)
-
-extension UIViewController {
-    
-    func getAlertView(title: String, error: String) {
-        let alertController = UIAlertController(title: title, message: error, preferredStyle: .alert)
-        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel)
-        alertController.addAction(dismissAction)
-        present(alertController, animated: true, completion: nil)
-    }
-    
-}
-
-
-
-
